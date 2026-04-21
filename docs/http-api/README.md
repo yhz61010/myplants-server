@@ -107,6 +107,36 @@
 示例上传接口：
 - `POST /api/upload`（返回 `{ "url": "https://..." }`）
 
+### 又拍云 (UpYun) 集成说明
+
+- 我们在服务端集成了又拍云 Go SDK（`github.com/upyun/go-sdk/v3/upyun`）。
+- 环境变量：
+  - `UPYUN_BUCKET`：又拍云空间名（例如 `myplants`）
+  - `UPYUN_OPERATOR`：操作员用户名
+  - `UPYUN_PASSWORD`：操作员密码
+
+- 行为：当上述三个环境变量都存在时，`POST /api/upload` 会使用 UpYun SDK 将上传的文件写入又拍云，返回的公有访问 URL 格式为 `https://myplants.leovp.com/<保存路径>`（域名需在又拍云控制台或 DNS 配置中绑定并启用 HTTPS）。
+- 对于大文件（>10MB）建议使用本地临时文件并通过 SDK 的 `LocalPath` 参数上传，以启用断点续传与 MD5 校验；当前实现会优先尝试使用流式 `Reader`，如需改为临时文件上传我可以修改。
+
+示例：
+
+请求（multipart/form-data）
+
+```
+POST /api/upload
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary...
+
+file=<binary file>
+```
+
+响应
+
+```json
+{ "url": "https://myplants.leovp.com/20260421/abcdef123456_image.jpg" }
+```
+
+注意：返回的 URL 假定你的自定义域 `myplants.leovp.com` 已正确指向又拍云或静态文件所在位置并配置了 HTTPS；如果只是用于本地测试，服务器会把文件保存到 `./uploads/`（同样返回一个 `https://myplants.leovp.com/...` 风格的 URL，但你需在部署时将域名指向实际存储或配置静态文件服务）。
+
 ---
 
 ## 错误码与响应规范

@@ -60,3 +60,13 @@
 - 实现日记和植物模型之间的关联
 - 添加索引以优化性能
 - 考虑添加验证约束
+
+## 图片与对象存储注意事项
+
+- 图片不存储为二进制；在 `Content.ImagesStr` 中仅保存图片 URL 的 JSON 数组（例如 `["https://.../a.jpg"]`）。
+- 本项目实现了一个上传接口 `/api/upload`，在有又拍云配置（`UPYUN_BUCKET`、`UPYUN_OPERATOR`、`UPYUN_PASSWORD`）时会将文件上传到又拍云；否则会把文件保存到 `./uploads/` 用于本地测试。
+- 上传后请把返回的 URL 填入 `images` 字段并提交到 `POST /api/diaries`（或 `/api/contents`）。
+
+## 索引和性能
+
+- 建议为 `Content.Title` 和 `Content.TagsStr` 添加索引以加速模糊查询（SQLite 的 LIKE 在前缀通配符时无法使用索引，考虑使用 FTS 扩展或者更强的数据库用于大规模数据）。

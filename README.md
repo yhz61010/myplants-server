@@ -56,3 +56,25 @@ myplants-server/
 
 ## API 文档
 详细的 HTTP API 文档请参考： [docs/http-api/README.md](docs/http-api/README.md)
+
+## 部署与环境变量
+在生产部署到 VPS 时，建议按以下要求配置环境变量并以 Release 模式运行：
+
+- `GIN_MODE=release`（`main.go` 已调用 `gin.SetMode(gin.ReleaseMode)`）
+- `JWT_SECRET`：用于签发 JWT 的 HMAC 密钥（不要硬编码到代码中）
+- 可选又拍云配置（用于图片上传）：
+	- `UPYUN_BUCKET`（例如 `myplants`）
+	- `UPYUN_OPERATOR`
+	- `UPYUN_PASSWORD`
+
+运行（示例）：
+
+```bash
+export JWT_SECRET="your_super_secret"
+export UPYUN_BUCKET="myplants"
+export UPYUN_OPERATOR="op"
+export UPYUN_PASSWORD="password"
+GIN_MODE=release go run cmd/myplants-server/main.go
+```
+
+注意：务必将 `JWT_SECRET`、`UPYUN_PASSWORD` 等敏感信息妥善保管在环境变量或机密管理系统中，不要提交到版本控制。
