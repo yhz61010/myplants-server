@@ -1,0 +1,2 @@
+- [Language preferences](feedback_language.md) — 交流和文档用中文，代码注释和 commit 用英文
+- [Cloud dev environment](project_cloud_env.md) — Claude Code 在云端运行，用户本地开发，部分文件可能未提交

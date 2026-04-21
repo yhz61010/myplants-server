@@ -89,4 +89,5 @@ gin.SetMode(gin.ReleaseMode)
 ###
 我想在 Web 页面的新增日记时,增加上传图片功能,现在的方式不好.并且希望支持拖拽上传. @templates/diaries.html 
 
-
+###
+@templates/diary_detail.html 编辑日记时,上传图片的部分,也希望是可以拖拽上传的.并且显示的缩略图的部分要按网格显示,并且点击图片时,要能查看大图. 
