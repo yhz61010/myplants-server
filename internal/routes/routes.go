@@ -20,8 +20,18 @@ func SetupRoutes(router *gin.Engine) {
 	api := router.Group("/api")
 	api.Use(middleware.AuthMiddleware())
 	{
-		// Diary routes
-		api.POST("/diaries", handlers.CreateDiary)
-		// Add more protected routes here
+		// Content CRUD routes (protected)
+		api.POST("/contents", handlers.CreateContent)
+		api.GET("/contents", handlers.ListContents)
+		api.GET("/contents/:id", handlers.GetContent)
+		api.PUT("/contents/:id", handlers.UpdateContent)
+		api.DELETE("/contents/:id", handlers.DeleteContent)
+
+		// Alias routes for backwards compatibility
+		api.POST("/diaries", handlers.CreateContent)
+		api.GET("/timeline", handlers.ListContents)
+
+		// Upload endpoint for images (stores URL only)
+		api.POST("/upload", handlers.UploadImage)
 	}
 }
