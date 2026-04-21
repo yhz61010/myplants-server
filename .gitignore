@@ -21,7 +21,7 @@ go.work
 /bin/
 
 # Compiled Go binary (if you build at project root)
-myplants-server
+/myplants-server
 
 # SQLite database files
 *.db
