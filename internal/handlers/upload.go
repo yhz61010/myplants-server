@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"crypto/md5"
+	"encoding/base64"
 	"encoding/hex"
 	"fmt"
 	"io"
@@ -48,6 +49,19 @@ func UploadImage(c *gin.Context) {
 	}
 	tmp.Close()
 
+	// compute MD5 of temp file for integrity check
+	var md5Hex string
+	var md5Base64 string
+	if f, err := os.Open(tmpPath); err == nil {
+		hasher := md5.New()
+		if _, err := io.Copy(hasher, f); err == nil {
+			sum := hasher.Sum(nil)
+			md5Hex = hex.EncodeToString(sum)
+			md5Base64 = base64.StdEncoding.EncodeToString(sum)
+		}
+		f.Close()
+	}
+
 	// If Upyun credentials present, attempt upload using local path (resumable)
 	upyunBucket := os.Getenv("UPYUN_BUCKET")
 	upyunOperator := os.Getenv("UPYUN_OPERATOR")
@@ -63,6 +77,14 @@ func UploadImage(c *gin.Context) {
 		headers := map[string]string{}
 		if ct := header.Header.Get("Content-Type"); ct != "" {
 			headers["Content-Type"] = ct
+		}
+		if md5Base64 != "" {
+			// HTTP Content-MD5 is base64 of MD5
+			headers["Content-MD5"] = md5Base64
+		}
+		if md5Hex != "" {
+			// also expose hex for debugging
+			headers["X-Content-MD5-Hex"] = md5Hex
 		}
 
 		cfg := &upyun.PutObjectConfig{
