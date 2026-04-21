@@ -12,7 +12,10 @@ import (
 	"strings"
 	"time"
 
+	"strconv"
+
 	"github.com/gin-gonic/gin"
+	upyun "github.com/upyun/go-sdk/v3/upyun"
 )
 
 // UploadImage handles POST /api/upload
@@ -36,36 +39,33 @@ func UploadImage(c *gin.Context) {
 	upyunPassword := os.Getenv("UPYUN_PASSWORD")
 
 	if upyunBucket != "" && upyunOperator != "" && upyunPassword != "" {
-		// Attempt Upyun upload via simple HTTP PUT to the bucket domain
-		// Note: This is a minimal implementation and requires correct
-		// operator/password (secret) to work. For robust integration,
-		// use the official SDK or implement form-signature properly.
-		url := fmt.Sprintf("https://%s/%s", upyunBucket, key)
-		req, err := http.NewRequest("PUT", url, file)
-		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to create upload request"})
-			return
-		}
-		// Upyun expects Authorization headers; leaving as-is will likely fail
-		// unless the bucket is configured to allow anonymous PUTs. Users
-		// should set up proper credentials and a proxy or use SDK.
-		req.Header.Set("User-Agent", "myplants-server/1.0")
-		req.Header.Set("Content-Type", header.Header.Get("Content-Type"))
+		// Use official UpYun SDK for upload
+		up := upyun.NewUpYun(&upyun.UpYunConfig{
+			Bucket:   upyunBucket,
+			Operator: upyunOperator,
+			Password: upyunPassword,
+		})
 
-		client := &http.Client{Timeout: 30 * time.Second}
-		resp, err := client.Do(req)
-		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "upload failed"})
-			return
+		// Build PutObjectConfig with Reader. For non-*os.File readers set Content-Length header.
+		headers := map[string]string{}
+		if header.Size > 0 {
+			headers["Content-Length"] = strconv.FormatInt(header.Size, 10)
 		}
-		defer resp.Body.Close()
-		if resp.StatusCode < 200 || resp.StatusCode >= 300 {
-			body, _ := io.ReadAll(resp.Body)
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "upload failed", "detail": string(body)})
+		if ct := header.Header.Get("Content-Type"); ct != "" {
+			headers["Content-Type"] = ct
+		}
+
+		cfg := &upyun.PutObjectConfig{
+			Path:    "/" + key,
+			Reader:  file,
+			Headers: headers,
+		}
+
+		if err := up.Put(cfg); err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "upyun upload failed", "detail": err.Error()})
 			return
 		}
 
-		// Returned URL uses custom domain as requested
 		publicURL := fmt.Sprintf("https://myplants.leovp.com/%s", key)
 		c.JSON(http.StatusOK, gin.H{"url": publicURL})
 		return

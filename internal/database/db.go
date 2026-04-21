@@ -2,6 +2,7 @@ package database
 
 import (
 	"log"
+	"time"
 
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
@@ -23,6 +24,13 @@ func InitDB() {
 	err = DB.AutoMigrate(&models.Content{}, &models.User{})
 	if err != nil {
 		log.Fatal("Failed to migrate database:", err)
+	}
+
+	// Optimize connection pool for 1-core / 1GB VPS
+	if sqlDB, err := DB.DB(); err == nil {
+		sqlDB.SetMaxOpenConns(1)
+		sqlDB.SetMaxIdleConns(1)
+		sqlDB.SetConnMaxLifetime(5 * time.Minute)
 	}
 
 	log.Println("Database connected and migrated successfully")
