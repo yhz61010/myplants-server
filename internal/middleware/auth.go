@@ -2,25 +2,17 @@ package middleware
 
 import (
 	"net/http"
-	"os"
 	"strings"
 
+	"myplants-server/internal/auth"
+
 	"github.com/gin-gonic/gin"
-	"github.com/golang-jwt/jwt/v5"
 
 	"myplants-server/internal/database"
 	"myplants-server/internal/models"
 )
 
-var jwtSecret []byte
-
-func init() {
-	s := os.Getenv("JWT_SECRET")
-	if s == "" {
-		s = "dev-secret"
-	}
-	jwtSecret = []byte(s)
-}
+// jwtSecret now managed by internal/auth
 
 // AuthMiddleware validates JWT tokens for protected routes
 func AuthMiddleware() gin.HandlerFunc {
@@ -40,30 +32,23 @@ func AuthMiddleware() gin.HandlerFunc {
 			return
 		}
 
-		// Parse and validate token
-		token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
-			return jwtSecret, nil
-		})
-
-		if err != nil || !token.Valid {
+		// Parse and validate token via internal/auth
+		claims, err := auth.ParseToken(tokenString)
+		if err != nil {
 			c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid token"})
 			c.Abort()
 			return
 		}
+		userID := uint(claims["userId"].(float64))
+		c.Set("userId", userID)
+		c.Set("username", claims["username"].(string))
 
-		// Extract claims
-		if claims, ok := token.Claims.(jwt.MapClaims); ok {
-			userID := uint(claims["userId"].(float64))
-			c.Set("userId", userID)
-			c.Set("username", claims["username"].(string))
-
-			// Fetch user from DB to get isAdmin
-			var user models.User
-			if err := database.GetDB().First(&user, userID).Error; err == nil {
-				c.Set("isAdmin", user.IsAdmin)
-			} else {
-				c.Set("isAdmin", false)
-			}
+		// Fetch user from DB to get isAdmin
+		var user models.User
+		if err := database.GetDB().First(&user, userID).Error; err == nil {
+			c.Set("isAdmin", user.IsAdmin)
+		} else {
+			c.Set("isAdmin", false)
 		}
 
 		c.Next()

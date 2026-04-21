@@ -3,28 +3,16 @@ package handlers
 import (
 	"fmt"
 	"net/http"
-	"os"
 	"strconv"
-	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/golang-jwt/jwt/v5"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 
+	"myplants-server/internal/auth"
 	"myplants-server/internal/database"
 	"myplants-server/internal/models"
 )
-
-var jwtSecret []byte
-
-func init() {
-	s := os.Getenv("JWT_SECRET")
-	if s == "" {
-		s = "dev-secret"
-	}
-	jwtSecret = []byte(s)
-}
 
 // RegisterRequest represents the request payload for user registration
 type RegisterRequest struct {
@@ -101,14 +89,8 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	// Generate JWT token
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"userId":   user.ID,
-		"username": user.Username,
-		"exp":      time.Now().Add(time.Hour * 24).Unix(), // 24 hours
-	})
-
-	tokenString, err := token.SignedString(jwtSecret)
+	// Generate JWT token via internal/auth
+	tokenString, err := auth.SignToken(user.ID, user.Username)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to generate token"})
 		return
@@ -380,7 +362,7 @@ func AdminUpdateUser(c *gin.Context) {
 // AdminDeleteUser handles DELETE /api/admin/users/:id
 func AdminDeleteUser(c *gin.Context) {
 	id := c.Param("id")
-    
+
 	// Prevent deleting yourself
 	uid, _ := c.Get("userId")
 	if strconv.FormatUint(uint64(uid.(uint)), 10) == id {
@@ -476,7 +458,7 @@ func AdminDeleteDiary(c *gin.Context) {
 	id := c.Param("id")
 	var content models.Content
 	db := database.GetDB()
-    
+
 	if err := db.First(&content, id).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
 			c.JSON(http.StatusNotFound, gin.H{"error": "not found"})

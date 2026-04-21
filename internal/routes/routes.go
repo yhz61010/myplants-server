@@ -11,7 +11,7 @@ import (
 func SetupRoutes(router *gin.Engine) {
 	// Serve static assets for admin panel from templates/static
 	router.Static("/admin/static", "./templates/static")
-	
+
 	// Admin page routes - serve HTML files
 	// Admin page routes - serve HTML files. Use StaticFile for exact paths
 	// to ensure serving works even if working dir differs.
