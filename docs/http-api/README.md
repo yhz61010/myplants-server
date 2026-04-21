@@ -53,26 +53,88 @@
 ## 内容管理（统一 `Content` 表：日记 / 植物）
 > 说明：`Content` 使用 `Type` 字段区分 `"diary"` 或 `"plant"`。植物的科/属信息以标签形式存入 `tags`，使用 `family_` 和 `genus_` 前缀区分。
 
-### 创建内容（发布日记或植物）
+### 创建日记
 - URL：`POST /api/diaries`
-- 描述：创建一条内容（日记或植物条目）
+- 描述：创建一条日记（栽培经验分享）
 - 认证：需要 `Authorization: Bearer <token>`
 - 请求体（JSON）：
   ```json
   {
-    "type": "diary" | "plant",
-    "userId": "string",
-    "title": "string",
+    "title": "string (required)",
     "content": "string",
-    "images": ["string"],
+    "images": ["string (URL)"],
     "tags": ["string"],
     "createTime": "string (optional, RFC3339)"
   }
   ```
+- 说明：`userId` 自动从 JWT Token 中获取，`type` 自动设为 `"diary"`
 - 响应：
-  - 201 Created：返回创建的内容对象
+  - 201 Created：返回创建的日记对象
   - 400 Bad Request：参数错误或时间格式不正确
   - 401 Unauthorized：未认证
+
+### 获取日记列表
+- URL：`GET /api/diaries?query=<q>&limit=<n>&offset=<m>`
+- 描述：获取日记列表（按创建时间倒序），支持分页和搜索
+- 认证：需要 `Authorization: Bearer <token>`
+- 参数：
+  - `query` (可选)：搜索关键字（匹配标题或标签）
+  - `limit` (可选)：每页数量，默认 10，最大 50
+  - `offset` (可选)：偏移量，默认 0
+- 响应：
+  - 200 OK：
+    ```json
+    {
+      "items": [
+        {
+          "id": 1,
+          "userId": "1",
+          "title": "我的第一篇栽培日记",
+          "content": "今天种下了一棵番茄...",
+          "images": ["https://.../image.jpg"],
+          "tags": ["番茄", "种植"],
+          "createdAt": "2026-04-21T10:00:00Z",
+          "updatedAt": "2026-04-21T10:00:00Z"
+        }
+      ],
+      "total": 123
+    }
+    ```
+
+### 获取单篇日记
+- URL：`GET /api/diaries/:id`
+- 描述：获取指定 ID 的日记详情
+- 认证：需要 `Authorization: Bearer <token>`
+- 响应：
+  - 200 OK：返回日记对象
+  - 404 Not Found：日记不存在
+
+### 更新日记
+- URL：`PUT /api/diaries/:id`
+- 描述：更新指定 ID 的日记（仅所有者可操作）
+- 认证：需要 `Authorization: Bearer <token>`
+- 请求体（JSON）：
+  ```json
+  {
+    "title": "string (optional)",
+    "content": "string (optional)",
+    "images": ["string (optional)"],
+    "tags": ["string (optional)"]
+  }
+  ```
+- 响应：
+  - 200 OK：返回更新后的日记对象
+  - 403 Forbidden：非所有者无权修改
+  - 404 Not Found：日记不存在
+
+### 删除日记
+- URL：`DELETE /api/diaries/:id`
+- 描述：删除指定 ID 的日记（仅所有者可操作）
+- 认证：需要 `Authorization: Bearer <token>`
+- 响应：
+  - 204 No Content：删除成功
+  - 403 Forbidden：非所有者无权删除
+  - 404 Not Found：日记不存在
 
 ### 按关键字模糊查询植物列表（植物知识库）
 - URL：`GET /api/plants?query=<q>&limit=<n>&offset=<m>`
