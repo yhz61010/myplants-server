@@ -41,6 +41,9 @@
 - `UpdatedAt` (time.Time): 更新时间戳
 - `DeletedAt` (gorm.DeletedAt): 软删除时间戳
 
+**新增字段/说明（根据当前实现）**:
+- `IsAdmin` (bool): 是否为管理员账户；管理端的受保护操作需要该字段为 true。
+
 **注意：**
 - 密码存储为哈希值，不在 API 响应中返回。
 - 用户名是唯一的。
@@ -48,6 +51,9 @@
 - **ORM**: GORM v1.31.1
 - **Driver**: gorm.io/driver/sqlite v1.6.0
 - **File**: `myplants.db`
+
+**连接池与资源约束**:
+- 为适配 1GB/1-core VPS，数据库连接池被限制为单连接：`SetMaxOpenConns(1)`、`SetMaxIdleConns(1)`、`SetConnMaxLifetime(5m)`（在 `internal/database/db.go` 初始化时设置）。
 
 ## 迁移
 数据库模式在应用程序启动时使用 GORM 的 AutoMigrate 功能自动迁移。
@@ -66,6 +72,9 @@
 - 图片不存储为二进制；在 `Content.ImagesStr` 中仅保存图片 URL 的 JSON 数组（例如 `["https://.../a.jpg"]`）。
 - 本项目实现了一个上传接口 `/api/upload`，在有又拍云配置（`UPYUN_BUCKET`、`UPYUN_OPERATOR`、`UPYUN_PASSWORD`）时会将文件上传到又拍云；否则会把文件保存到 `./uploads/` 用于本地测试。
 - 上传后请把返回的 URL 填入 `images` 字段并提交到 `POST /api/diaries`（或 `/api/contents`）。
+
+**分页与访问约束**:
+- 所有 "列表" 接口均强制分页（`limit`/`offset`），且 `limit` 有上限（当前实现默认 10，最大 50），以防止一次性读取过多数据造成内存问题。
 
 ## 索引和性能
 

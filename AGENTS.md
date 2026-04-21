@@ -24,9 +24,9 @@
 
 ## 构建和测试命令
 - 初始化依赖：`go mod tidy`
-- 构建应用程序：`go build`
+- 构建应用程序：`go build ./cmd/myplants-server`
 - 运行测试：`go test ./...`
-- 启动开发服务器：`go run main.go`（假设 main.go 是入口点）
+- 启动开发服务器：`go run ./cmd/myplants-server/main.go`
 
 ## 关键目录/文件
 - `main.go`：应用程序入口点

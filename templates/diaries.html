@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>日记管理 - MyPlants 管理后台</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center space-x-4">
+                    <a href="/admin/" class="text-xl font-bold text-gray-800 hover:text-blue-600">MyPlants 管理后台</a>
+                    <span class="text-gray-400">/</span>
+                    <span class="text-gray-600">日记管理</span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <span id="currentUser" class="text-gray-600"></span>
+                    <button onclick="logout()" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md text-sm">
+                        退出登录
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto px-4 py-8">
+        <div class="bg-white rounded-lg shadow-md">
+            <div class="p-6 border-b flex justify-between items-center">
+                <h1 class="text-2xl font-bold text-gray-800">日记管理</h1>
+                <button onclick="openAddModal()" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md text-sm">
+                    + 添加日记
+                </button>
+            </div>
+            
+            <!-- Search -->
+            <div class="p-4 border-b bg-gray-50">
+                <input type="text" id="searchInput" placeholder="搜索标题或标签..." 
+                    class="w-full md:w-64 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                    onkeyup="if(event.key==='Enter')loadDiaries()">
+                <button onclick="loadDiaries()" class="ml-2 bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-md text-sm">
+                    搜索
+                </button>
+            </div>
+            
+            <!-- Diaries Table -->
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">标题</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">作者</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">内容预览</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">图片</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">创建时间</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="diariesTable" class="bg-white divide-y divide-gray-200">
+                        <tr><td colspan="7" class="px-6 py-4 text-center text-gray-500">加载中...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Pagination -->
+            <div class="p-4 border-t flex justify-between items-center">
+                <span id="pageInfo" class="text-sm text-gray-600"></span>
+                <div class="space-x-2">
+                    <button onclick="prevPage()" id="prevBtn" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-md text-sm disabled:opacity-50" disabled>上一页</button>
+                    <button onclick="nextPage()" id="nextBtn" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-md text-sm disabled:opacity-50" disabled>下一页</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add/Edit Diary Modal -->
+    <div id="diaryModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl mx-4 max-h-[90vh] overflow-y-auto">
+            <div class="p-6 border-b">
+                <h2 id="modalTitle" class="text-xl font-bold text-gray-800">添加日记</h2>
+            </div>
+            <form id="diaryForm" class="p-6 space-y-4">
+                <input type="hidden" id="diaryId">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">标题 *</label>
+                    <input type="text" id="formTitle" required
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">内容</label>
+                    <textarea id="formContent" rows="5"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"></textarea>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">图片 URL（每行一个）</label>
+                    <textarea id="formImages" rows="3" placeholder="https://example.com/image1.jpg&#10;https://example.com/image2.jpg"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"></textarea>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">标签（逗号分隔）</label>
+                    <input type="text" id="formTags" placeholder="番茄, 种植, 栽培"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+                </div>
+                <div class="flex justify-end space-x-3 pt-4">
+                    <button type="button" onclick="closeModal()" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-md text-sm">取消</button>
+                    <button type="submit" class="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-md text-sm">保存</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div id="deleteModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-sm mx-4 p-6">
+            <h2 class="text-xl font-bold text-gray-800 mb-4">确认删除</h2>
+            <p id="deleteMsg" class="text-gray-600 mb-6">确定要删除此日记吗？此操作不可恢复。</p>
+            <div class="flex justify-end space-x-3">
+                <button onclick="closeDeleteModal()" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-md text-sm">取消</button>
+                <button onclick="confirmDelete()" class="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-md text-sm">删除</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = window.location.origin + '/api';
+        let token, currentUser;
+        let offset = 0, limit = 10, total = 0;
+        let deleteDiaryId = null;
+        let usersMap = {};
+        
+        // Check auth
+        function checkAuth() {
+            token = localStorage.getItem('token');
+            const userStr = localStorage.getItem('user');
+            if (!token || !userStr) {
+                window.location.href = '/admin/login';
+                return false;
+            }
+            currentUser = JSON.parse(userStr);
+            if (!currentUser.isAdmin) {
+                alert('您没有管理员权限');
+                localStorage.clear();
+                window.location.href = '/admin/login';
+                return false;
+            }
+            document.getElementById('currentUser').textContent = `欢迎，${currentUser.username}`;
+            return true;
+        }
+        
+        // Load users for mapping
+        async function loadUsers() {
+            try {
+                const response = await fetch(`${API_BASE}/users?limit=100`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await response.json();
+                if (response.ok) {
+                    data.items.forEach(u => {
+                        usersMap[u.id] = u.username;
+                    });
+                }
+            } catch (err) {
+                console.error('Failed to load users:', err);
+            }
+        }
+        
+        // Load diaries
+        async function loadDiaries() {
+            const query = document.getElementById('searchInput').value;
+            let url = `${API_BASE}/diaries?limit=${limit}&offset=${offset}`;
+            if (query) {
+                url += `&query=${encodeURIComponent(query)}`;
+            }
+            
+            try {
+                const response = await fetch(url, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await response.json();
+                
+                if (response.ok) {
+                    total = data.total;
+                    renderDiaries(data.items);
+                    updatePagination();
+                } else {
+                    console.error('Failed to load diaries:', data.error);
+                }
+            } catch (err) {
+                console.error('Network error:', err);
+            }
+        }
+        
+        function renderDiaries(diaries) {
+            const tbody = document.getElementById('diariesTable');
+            
+            if (diaries.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" class="px-6 py-4 text-center text-gray-500">暂无数据</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = diaries.map(d => `
+                <tr class="hover:bg-gray-50">
+                    <td class="px-6 py-4 text-sm text-gray-900">${d.id}</td>
+                    <td class="px-6 py-4 text-sm font-medium text-gray-900">${escapeHtml(d.title)}</td>
+                    <td class="px-6 py-4 text-sm text-gray-500">${usersMap[parseInt(d.userId)] || d.userId}</td>
+                    <td class="px-6 py-4 text-sm text-gray-500 max-w-xs truncate">${escapeHtml(d.content || '-')}</td>
+                    <td class="px-6 py-4 text-sm text-gray-500">
+                        ${d.images && d.images.length > 0 
+                            ? `<span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs">${d.images.length} 张</span>`
+                            : '-'}
+                    </td>
+                    <td class="px-6 py-4 text-sm text-gray-500">${formatDate(d.createdAt)}</td>
+                    <td class="px-6 py-4 text-sm space-x-2">
+                        <button onclick="viewDiary(${d.id})" class="text-blue-500 hover:text-blue-700">查看</button>
+                        <button onclick="editDiary(${d.id})" class="text-green-500 hover:text-green-700">编辑</button>
+                        <button onclick="deleteDiary(${d.id}, '${escapeHtml(d.title)}')" class="text-red-500 hover:text-red-700">删除</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+        
+        function updatePagination() {
+            const start = offset + 1;
+            const end = Math.min(offset + limit, total);
+            document.getElementById('pageInfo').textContent = `显示 ${start}-${end} 条，共 ${total} 条`;
+            
+            document.getElementById('prevBtn').disabled = offset === 0;
+            document.getElementById('nextBtn').disabled = end >= total;
+        }
+        
+        function prevPage() {
+            if (offset >= limit) {
+                offset -= limit;
+                loadDiaries();
+            }
+        }
+        
+        function nextPage() {
+            if (offset + limit < total) {
+                offset += limit;
+                loadDiaries();
+            }
+        }
+        
+        // Modal functions
+        function openAddModal() {
+            document.getElementById('modalTitle').textContent = '添加日记';
+            document.getElementById('diaryId').value = '';
+            document.getElementById('formTitle').value = '';
+            document.getElementById('formContent').value = '';
+            document.getElementById('formImages').value = '';
+            document.getElementById('formTags').value = '';
+            document.getElementById('diaryModal').classList.remove('hidden');
+            document.getElementById('diaryModal').classList.add('flex');
+        }
+        
+        async function editDiary(id) {
+            try {
+                const response = await fetch(`${API_BASE}/diaries/${id}`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const diary = await response.json();
+                
+                if (response.ok) {
+                    document.getElementById('modalTitle').textContent = '编辑日记';
+                    document.getElementById('diaryId').value = diary.id;
+                    document.getElementById('formTitle').value = diary.title;
+                    document.getElementById('formContent').value = diary.content || '';
+                    document.getElementById('formImages').value = (diary.images || []).join('\n');
+                    document.getElementById('formTags').value = (diary.tags || []).join(', ');
+                    document.getElementById('diaryModal').classList.remove('hidden');
+                    document.getElementById('diaryModal').classList.add('flex');
+                } else {
+                    alert('获取日记信息失败: ' + diary.error);
+                }
+            } catch (err) {
+                alert('网络错误');
+            }
+        }
+        
+        function closeModal() {
+            document.getElementById('diaryModal').classList.add('hidden');
+            document.getElementById('diaryModal').classList.remove('flex');
+        }
+        
+        // Form submit
+        document.getElementById('diaryForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const id = document.getElementById('diaryId').value;
+            const title = document.getElementById('formTitle').value;
+            const content = document.getElementById('formContent').value;
+            const imagesText = document.getElementById('formImages').value;
+            const tagsText = document.getElementById('formTags').value;
+            
+            const images = imagesText.split('\n').map(s => s.trim()).filter(s => s);
+            const tags = tagsText.split(',').map(s => s.trim()).filter(s => s);
+            
+            const isEdit = !!id;
+            
+            try {
+                let response;
+                if (isEdit) {
+                    response = await fetch(`${API_BASE}/admin/diaries/${id}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ title, content, images, tags })
+                    });
+                } else {
+                    response = await fetch(`${API_BASE}/admin/diaries`, {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ title, content, images, tags })
+                    });
+                }
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    closeModal();
+                    loadDiaries();
+                } else {
+                    alert('操作失败: ' + data.error);
+                }
+            } catch (err) {
+                alert('网络错误');
+            }
+        });
+        
+        // View diary
+        function viewDiary(id) {
+            window.location.href = `/admin/diaries/${id}`;
+        }
+        
+        // Delete diary
+        function deleteDiary(id, title) {
+            deleteDiaryId = id;
+            document.getElementById('deleteMsg').textContent = `确定要删除日记 "${title}" 吗？此操作不可恢复。`;
+            document.getElementById('deleteModal').classList.remove('hidden');
+            document.getElementById('deleteModal').classList.add('flex');
+        }
+        
+        function closeDeleteModal() {
+            document.getElementById('deleteModal').classList.add('hidden');
+            document.getElementById('deleteModal').classList.remove('flex');
+            deleteDiaryId = null;
+        }
+        
+        async function confirmDelete() {
+            if (!deleteDiaryId) return;
+            
+            try {
+                const response = await fetch(`${API_BASE}/admin/diaries/${deleteDiaryId}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                
+                if (response.ok) {
+                    closeDeleteModal();
+                    loadDiaries();
+                } else {
+                    const data = await response.json();
+                    alert('删除失败: ' + data.error);
+                }
+            } catch (err) {
+                alert('网络错误');
+            }
+        }
+        
+        function logout() {
+            localStorage.clear();
+            window.location.href = '/admin/login';
+        }
+        
+        // Utils
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        function formatDate(dateStr) {
+            if (!dateStr) return '-';
+            const date = new Date(dateStr);
+            return date.toLocaleString('zh-CN');
+        }
+        
+        // Init
+        if (checkAuth()) {
+            loadUsers().then(() => loadDiaries());
+        }
+    </script>
+</body>
+</html>

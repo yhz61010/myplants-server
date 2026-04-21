@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>管理后台 - MyPlants</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <span class="text-xl font-bold text-gray-800">MyPlants 管理后台</span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <span id="currentUser" class="text-gray-600"></span>
+                    <button onclick="logout()" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md text-sm">
+                        退出登录
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto px-4 py-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Users Card -->
+            <div class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition">
+                <div class="flex items-center mb-4">
+                    <div class="bg-blue-500 p-3 rounded-full">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
+                        </svg>
+                    </div>
+                    <h2 class="ml-4 text-xl font-semibold text-gray-800">用户管理</h2>
+                </div>
+                <p class="text-gray-600 mb-4">管理系统用户账户，包括查看、添加、修改和删除用户。</p>
+                <a href="/admin/users" class="inline-block bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md text-sm">
+                    进入管理 →
+                </a>
+            </div>
+
+            <!-- Diaries Card -->
+            <div class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition">
+                <div class="flex items-center mb-4">
+                    <div class="bg-green-500 p-3 rounded-full">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                    </div>
+                    <h2 class="ml-4 text-xl font-semibold text-gray-800">日记管理</h2>
+                </div>
+                <p class="text-gray-600 mb-4">查看和管理所有用户的栽培日记，支持增删改查操作。</p>
+                <a href="/admin/diaries" class="inline-block bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md text-sm">
+                    进入管理 →
+                </a>
+            </div>
+        </div>
+
+        <!-- Stats Section -->
+        <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">统计数据</h3>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="text-center p-4 bg-gray-50 rounded-lg">
+                        <p id="userCount" class="text-3xl font-bold text-blue-500">-</p>
+                        <p class="text-gray-600 text-sm">用户总数</p>
+                    </div>
+                    <div class="text-center p-4 bg-gray-50 rounded-lg">
+                        <p id="diaryCount" class="text-3xl font-bold text-green-500">-</p>
+                        <p class="text-gray-600 text-sm">日记总数</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = window.location.origin + '/api';
+        
+        // Check authentication
+        const token = localStorage.getItem('token');
+        const userStr = localStorage.getItem('user');
+        
+        if (!token || !userStr) {
+            window.location.href = '/admin/login';
+        }
+        
+        const user = JSON.parse(userStr);
+        if (!user.isAdmin) {
+            alert('您没有管理员权限');
+            localStorage.clear();
+            window.location.href = '/admin/login';
+        }
+        
+        document.getElementById('currentUser').textContent = `欢迎，${user.username}`;
+        
+        // Load stats
+        async function loadStats() {
+            try {
+                const headers = {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                };
+                
+                const [usersRes, diariesRes] = await Promise.all([
+                    fetch(`${API_BASE}/users?limit=1`, { headers }),
+                    fetch(`${API_BASE}/diaries?limit=1`, { headers })
+                ]);
+                
+                if (usersRes.ok) {
+                    const userData = await usersRes.json();
+                    document.getElementById('userCount').textContent = userData.total || 0;
+                }
+                
+                if (diariesRes.ok) {
+                    const diaryData = await diariesRes.json();
+                    document.getElementById('diaryCount').textContent = diaryData.total || 0;
+                }
+            } catch (err) {
+                console.error('Failed to load stats:', err);
+            }
+        }
+        
+        function logout() {
+            localStorage.clear();
+            window.location.href = '/admin/login';
+        }
+        
+        loadStats();
+    </script>
+</body>
+</html>

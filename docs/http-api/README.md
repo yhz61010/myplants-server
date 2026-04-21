@@ -48,6 +48,8 @@
     ```
   - 401 Unauthorized：凭据错误
 
+注意：返回的 `user` 中包含 `isAdmin` 布尔字段，管理端前端会读取该字段判断是否展示管理员视图。
+
 ---
 
 ## 内容管理（统一 `Content` 表：日记 / 植物）
@@ -68,6 +70,8 @@
   }
   ```
 - 说明：`userId` 自动从 JWT Token 中获取，`type` 自动设为 `"diary"`
+
+注意：`userId` 从 JWT claims 的 `userId` 字段读取；JWT 的签发和校验使用 HMAC-SHA256，签名密钥由环境变量 `JWT_SECRET` 提供（如果未设置，程序使用内置开发密钥 `dev-secret`，请勿在生产环境使用）。
 - 响应：
   - 201 Created：返回创建的日记对象
   - 400 Bad Request：参数错误或时间格式不正确
@@ -77,6 +81,8 @@
 - URL：`GET /api/diaries?query=<q>&limit=<n>&offset=<m>`
 - 描述：获取日记列表（按创建时间倒序），支持分页和搜索
 - 认证：需要 `Authorization: Bearer <token>`
+
+实现细节：列表接口支持 `query`（模糊匹配 `title` 与 `tags`），`limit` 和 `offset` 用于分页。最大 `limit` 为 50。
 - 参数：
   - `query` (可选)：搜索关键字（匹配标题或标签）
   - `limit` (可选)：每页数量，默认 10，最大 50
@@ -158,6 +164,8 @@
 - 参数：同上（`limit`/`offset`），默认 `limit=10`
 - 响应：同上
 
+实现细节：`GET /api/timeline` 实际映射到 `ListContents`，返回 `Content` 对象的 `items` 数组和 `total` 总计。
+
 ---
 
 ## 图片上传建议
@@ -179,6 +187,10 @@
 
 - 行为：当上述三个环境变量都存在时，`POST /api/upload` 会使用 UpYun SDK 将上传的文件写入又拍云，返回的公有访问 URL 格式为 `https://myplants.leovp.com/<保存路径>`（域名需在又拍云控制台或 DNS 配置中绑定并启用 HTTPS）。
 - 对于大文件（>10MB）建议使用本地临时文件并通过 SDK 的 `LocalPath` 参数上传，以启用断点续传与 MD5 校验；当前实现会优先尝试使用流式 `Reader`，如需改为临时文件上传我可以修改。
+
+当前实现细节：
+- 当 `UPYUN_BUCKET`、`UPYUN_OPERATOR`、`UPYUN_PASSWORD` 都已设置时，服务器会使用 UpYun SDK 的 `Put` 接口上传文件。若这些环境变量任一缺失，处理器会把文件写入 `./uploads/` 并返回一个伪造的 `https://myplants.leovp.com/...` 风格 URL，用于本地测试。
+- 推荐改进（已在任务列表中）：将上传逻辑改为先写到临时文件再调用 SDK 的 `LocalPath` 上传，从而支持断点续传和 MD5 校验。
 
 示例：
 

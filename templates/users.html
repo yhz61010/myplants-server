@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>用户管理 - MyPlants 管理后台</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center space-x-4">
+                    <a href="/admin/" class="text-xl font-bold text-gray-800 hover:text-blue-600">MyPlants 管理后台</a>
+                    <span class="text-gray-400">/</span>
+                    <span class="text-gray-600">用户管理</span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <span id="currentUser" class="text-gray-600"></span>
+                    <button onclick="logout()" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md text-sm">
+                        退出登录
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto px-4 py-8">
+        <div class="bg-white rounded-lg shadow-md">
+            <div class="p-6 border-b flex justify-between items-center">
+                <h1 class="text-2xl font-bold text-gray-800">用户管理</h1>
+                <button onclick="openAddModal()" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md text-sm">
+                    + 添加用户
+                </button>
+            </div>
+            
+            <!-- Search -->
+            <div class="p-4 border-b bg-gray-50">
+                <input type="text" id="searchInput" placeholder="搜索用户名..." 
+                    class="w-full md:w-64 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    onkeyup="if(event.key==='Enter')loadUsers()">
+                <button onclick="loadUsers()" class="ml-2 bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-md text-sm">
+                    搜索
+                </button>
+            </div>
+            
+            <!-- Users Table -->
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">用户名</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">头像</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">简介</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">管理员</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">创建时间</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="usersTable" class="bg-white divide-y divide-gray-200">
+                        <tr><td colspan="7" class="px-6 py-4 text-center text-gray-500">加载中...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Pagination -->
+            <div class="p-4 border-t flex justify-between items-center">
+                <span id="pageInfo" class="text-sm text-gray-600"></span>
+                <div class="space-x-2">
+                    <button onclick="prevPage()" id="prevBtn" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-md text-sm disabled:opacity-50" disabled>上一页</button>
+                    <button onclick="nextPage()" id="nextBtn" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-md text-sm disabled:opacity-50" disabled>下一页</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add/Edit User Modal -->
+    <div id="userModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-md mx-4">
+            <div class="p-6 border-b">
+                <h2 id="modalTitle" class="text-xl font-bold text-gray-800">添加用户</h2>
+            </div>
+            <form id="userForm" class="p-6 space-y-4">
+                <input type="hidden" id="userId">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">用户名 *</label>
+                    <input type="text" id="formUsername" required
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div id="passwordField">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">密码 * <span id="passwordHint" class="text-gray-400 text-xs">(至少6位)</span></label>
+                    <input type="password" id="formPassword"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">头像 URL</label>
+                    <input type="text" id="formAvatar"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">简介</label>
+                    <textarea id="formBio" rows="3"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                </div>
+                <div class="flex items-center">
+                    <input type="checkbox" id="formIsAdmin" class="h-4 w-4 text-blue-600 border-gray-300 rounded">
+                    <label for="formIsAdmin" class="ml-2 text-sm text-gray-700">管理员权限</label>
+                </div>
+                <div class="flex justify-end space-x-3 pt-4">
+                    <button type="button" onclick="closeModal()" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-md text-sm">取消</button>
+                    <button type="submit" class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md text-sm">保存</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div id="deleteModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-sm mx-4 p-6">
+            <h2 class="text-xl font-bold text-gray-800 mb-4">确认删除</h2>
+            <p class="text-gray-600 mb-6">确定要删除此用户吗？此操作不可恢复。</p>
+            <div class="flex justify-end space-x-3">
+                <button onclick="closeDeleteModal()" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-md text-sm">取消</button>
+                <button onclick="confirmDelete()" class="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-md text-sm">删除</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = window.location.origin + '/api';
+        let token, currentUser;
+        let offset = 0, limit = 10, total = 0;
+        let deleteUserId = null;
+        
+        // Check auth
+        function checkAuth() {
+            token = localStorage.getItem('token');
+            const userStr = localStorage.getItem('user');
+            if (!token || !userStr) {
+                window.location.href = '/admin/login';
+                return false;
+            }
+            currentUser = JSON.parse(userStr);
+            if (!currentUser.isAdmin) {
+                alert('您没有管理员权限');
+                localStorage.clear();
+                window.location.href = '/admin/login';
+                return false;
+            }
+            document.getElementById('currentUser').textContent = `欢迎，${currentUser.username}`;
+            return true;
+        }
+        
+        // Load users
+        async function loadUsers() {
+            const query = document.getElementById('searchInput').value;
+            let url = `${API_BASE}/users?limit=${limit}&offset=${offset}`;
+            
+            try {
+                const response = await fetch(url, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await response.json();
+                
+                if (response.ok) {
+                    total = data.total;
+                    renderUsers(data.items);
+                    updatePagination();
+                } else {
+                    console.error('Failed to load users:', data.error);
+                }
+            } catch (err) {
+                console.error('Network error:', err);
+            }
+        }
+        
+        function renderUsers(users) {
+            const tbody = document.getElementById('usersTable');
+            
+            // Filter by search query on client side since API doesn't support it
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const filtered = query ? users.filter(u => u.username.toLowerCase().includes(query)) : users;
+            
+            if (filtered.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" class="px-6 py-4 text-center text-gray-500">暂无数据</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = filtered.map(user => `
+                <tr class="hover:bg-gray-50">
+                    <td class="px-6 py-4 text-sm text-gray-900">${user.id}</td>
+                    <td class="px-6 py-4 text-sm font-medium text-gray-900">${escapeHtml(user.username)}</td>
+                    <td class="px-6 py-4 text-sm text-gray-500">
+                        ${user.avatar ? `<img src="${escapeHtml(user.avatar)}" class="w-8 h-8 rounded-full object-cover">` : '-'}
+                    </td>
+                    <td class="px-6 py-4 text-sm text-gray-500 max-w-xs truncate">${escapeHtml(user.bio || '-')}</td>
+                    <td class="px-6 py-4 text-sm">
+                        ${user.isAdmin ? '<span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs">是</span>' : '<span class="px-2 py-1 bg-gray-100 text-gray-600 rounded-full text-xs">否</span>'}
+                    </td>
+                    <td class="px-6 py-4 text-sm text-gray-500">${formatDate(user.createdAt)}</td>
+                    <td class="px-6 py-4 text-sm space-x-2">
+                        <button onclick="viewUser(${user.id})" class="text-blue-500 hover:text-blue-700">查看</button>
+                        <button onclick="editUser(${user.id})" class="text-green-500 hover:text-green-700">编辑</button>
+                        <button onclick="deleteUser(${user.id}, '${escapeHtml(user.username)}')" class="text-red-500 hover:text-red-700">删除</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+        
+        function updatePagination() {
+            const start = offset + 1;
+            const end = Math.min(offset + limit, total);
+            document.getElementById('pageInfo').textContent = `显示 ${start}-${end} 条，共 ${total} 条`;
+            
+            document.getElementById('prevBtn').disabled = offset === 0;
+            document.getElementById('nextBtn').disabled = end >= total;
+        }
+        
+        function prevPage() {
+            if (offset >= limit) {
+                offset -= limit;
+                loadUsers();
+            }
+        }
+        
+        function nextPage() {
+            if (offset + limit < total) {
+                offset += limit;
+                loadUsers();
+            }
+        }
+        
+        // Modal functions
+        function openAddModal() {
+            document.getElementById('modalTitle').textContent = '添加用户';
+            document.getElementById('userId').value = '';
+            document.getElementById('formUsername').value = '';
+            document.getElementById('formPassword').value = '';
+            document.getElementById('formPassword').required = true;
+            document.getElementById('passwordHint').textContent = '(至少6位)';
+            document.getElementById('formAvatar').value = '';
+            document.getElementById('formBio').value = '';
+            document.getElementById('formIsAdmin').checked = false;
+            document.getElementById('userModal').classList.remove('hidden');
+            document.getElementById('userModal').classList.add('flex');
+        }
+        
+        async function editUser(id) {
+            try {
+                const response = await fetch(`${API_BASE}/users/${id}`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const user = await response.json();
+                
+                if (response.ok) {
+                    document.getElementById('modalTitle').textContent = '编辑用户';
+                    document.getElementById('userId').value = user.id;
+                    document.getElementById('formUsername').value = user.username;
+                    document.getElementById('formPassword').value = '';
+                    document.getElementById('formPassword').required = false;
+                    document.getElementById('passwordHint').textContent = '(留空则不修改)';
+                    document.getElementById('formAvatar').value = user.avatar || '';
+                    document.getElementById('formBio').value = user.bio || '';
+                    document.getElementById('formIsAdmin').checked = user.isAdmin;
+                    document.getElementById('userModal').classList.remove('hidden');
+                    document.getElementById('userModal').classList.add('flex');
+                } else {
+                    alert('获取用户信息失败: ' + user.error);
+                }
+            } catch (err) {
+                alert('网络错误');
+            }
+        }
+        
+        function closeModal() {
+            document.getElementById('userModal').classList.add('hidden');
+            document.getElementById('userModal').classList.remove('flex');
+        }
+        
+        // Form submit
+        document.getElementById('userForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const id = document.getElementById('userId').value;
+            const username = document.getElementById('formUsername').value;
+            const password = document.getElementById('formPassword').value;
+            const avatar = document.getElementById('formAvatar').value;
+            const bio = document.getElementById('formBio').value;
+            const isAdmin = document.getElementById('formIsAdmin').checked;
+            
+            const isEdit = !!id;
+            
+            try {
+                let response;
+                if (isEdit) {
+                    // Update existing user - need to use admin endpoint
+                    const updateData = { avatar, bio, isAdmin };
+                    if (password) {
+                        updateData.password = password;
+                    }
+                    response = await fetch(`${API_BASE}/admin/users/${id}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(updateData)
+                    });
+                } else {
+                    // Create new user
+                    response = await fetch(`${API_BASE}/auth/register`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ username, password, avatar, bio })
+                    });
+                    
+                    // If create successful and isAdmin, need to update isAdmin
+                    if (response.ok && isAdmin) {
+                        const newUser = await response.json();
+                        await fetch(`${API_BASE}/admin/users/${newUser.id}`, {
+                            method: 'PUT',
+                            headers: {
+                                'Authorization': `Bearer ${token}`,
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ isAdmin: true })
+                        });
+                    }
+                }
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    closeModal();
+                    loadUsers();
+                } else {
+                    alert('操作失败: ' + data.error);
+                }
+            } catch (err) {
+                alert('网络错误');
+            }
+        });
+        
+        // View user
+        function viewUser(id) {
+            window.location.href = `/admin/users/${id}`;
+        }
+        
+        // Delete user
+        function deleteUser(id, username) {
+            deleteUserId = id;
+            document.getElementById('deleteModal').querySelector('p').textContent = `确定要删除用户 "${username}" 吗？此操作不可恢复。`;
+            document.getElementById('deleteModal').classList.remove('hidden');
+            document.getElementById('deleteModal').classList.add('flex');
+        }
+        
+        function closeDeleteModal() {
+            document.getElementById('deleteModal').classList.add('hidden');
+            document.getElementById('deleteModal').classList.remove('flex');
+            deleteUserId = null;
+        }
+        
+        async function confirmDelete() {
+            if (!deleteUserId) return;
+            
+            try {
+                const response = await fetch(`${API_BASE}/admin/users/${deleteUserId}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                
+                if (response.ok) {
+                    closeDeleteModal();
+                    loadUsers();
+                } else {
+                    const data = await response.json();
+                    alert('删除失败: ' + data.error);
+                }
+            } catch (err) {
+                alert('网络错误');
+            }
+        }
+        
+        function logout() {
+            localStorage.clear();
+            window.location.href = '/admin/login';
+        }
+        
+        // Utils
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        function formatDate(dateStr) {
+            if (!dateStr) return '-';
+            const date = new Date(dateStr);
+            return date.toLocaleString('zh-CN');
+        }
+        
+        // Init
+        if (checkAuth()) {
+            loadUsers();
+        }
+    </script>
+</body>

@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>用户详情 - MyPlants 管理后台</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center space-x-4">
+                    <a href="/admin/" class="text-xl font-bold text-gray-800 hover:text-blue-600">MyPlants 管理后台</a>
+                    <span class="text-gray-400">/</span>
+                    <a href="/admin/users" class="text-gray-600 hover:text-blue-600">用户管理</a>
+                    <span class="text-gray-400">/</span>
+                    <span class="text-gray-600" id="breadcrumbName">用户详情</span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <span id="currentUser" class="text-gray-600"></span>
+                    <button onclick="logout()" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md text-sm">
+                        退出登录
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="max-w-4xl mx-auto px-4 py-8">
+        <div class="bg-white rounded-lg shadow-md">
+            <div class="p-6 border-b flex justify-between items-center">
+                <h1 class="text-2xl font-bold text-gray-800">用户详情</h1>
+                <div class="space-x-2">
+                    <button onclick="openEditModal()" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md text-sm">
+                        编辑
+                    </button>
+                    <button onclick="deleteUser()" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md text-sm">
+                        删除
+                    </button>
+                </div>
+            </div>
+            
+            <div id="userContent" class="p-6">
+                <p class="text-center text-gray-500">加载中...</p>
+            </div>
+        </div>
+        
+        <!-- User's Diaries -->
+        <div class="bg-white rounded-lg shadow-md mt-6">
+            <div class="p-6 border-b">
+                <h2 class="text-xl font-bold text-gray-800">该用户的日记</h2>
+            </div>
+            <div id="diariesContent" class="p-6">
+                <p class="text-center text-gray-500">加载中...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Modal -->
+    <div id="editModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-md mx-4">
+            <div class="p-6 border-b">
+                <h2 class="text-xl font-bold text-gray-800">编辑用户</h2>
+            </div>
+            <form id="editForm" class="p-6 space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">用户名</label>
+                    <input type="text" id="editUsername" disabled
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">新密码 <span class="text-gray-400 text-xs">(留空则不修改)</span></label>
+                    <input type="password" id="editPassword"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">头像 URL</label>
+                    <input type="text" id="editAvatar"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">简介</label>
+                    <textarea id="editBio" rows="3"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                </div>
+                <div class="flex items-center">
+                    <input type="checkbox" id="editIsAdmin" class="h-4 w-4 text-blue-600 border-gray-300 rounded">
+                    <label for="editIsAdmin" class="ml-2 text-sm text-gray-700">管理员权限</label>
+                </div>
+                <div class="flex justify-end space-x-3 pt-4">
+                    <button type="button" onclick="closeEditModal()" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-md text-sm">取消</button>
+                    <button type="submit" class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md text-sm">保存</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = window.location.origin + '/api';
+        let token, currentUser, userId;
+        
+        // Check auth
+        function checkAuth() {
+            token = localStorage.getItem('token');
+            const userStr = localStorage.getItem('user');
+            if (!token || !userStr) {
+                window.location.href = '/admin/login';
+                return false;
+            }
+            currentUser = JSON.parse(userStr);
+            if (!currentUser.isAdmin) {
+                alert('您没有管理员权限');
+                localStorage.clear();
+                window.location.href = '/admin/login';
+                return false;
+            }
+            document.getElementById('currentUser').textContent = `欢迎，${currentUser.username}`;
+            return true;
+        }
+        
+        // Get user ID from URL
+        function getUserId() {
+            const path = window.location.pathname;
+            const matches = path.match(/\/admin\/users\/(\d+)/);
+            return matches ? matches[1] : null;
+        }
+        
+        // Load user data
+        async function loadUser() {
+            if (!userId) {
+                document.getElementById('userContent').innerHTML = '<p class="text-center text-red-500">用户ID无效</p>';
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${API_BASE}/users/${userId}`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const user = await response.json();
+                
+                if (response.ok) {
+                    document.getElementById('breadcrumbName').textContent = user.username;
+                    document.getElementById('userContent').innerHTML = `
+                        <div class="flex items-start space-x-6">
+                            <div class="flex-shrink-0">
+                                ${user.avatar 
+                                    ? `<img src="${escapeHtml(user.avatar)}" class="w-24 h-24 rounded-full object-cover">`
+                                    : `<div class="w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center text-3xl text-gray-500">${user.username.charAt(0).toUpperCase()}</div>`
+                                }
+                            </div>
+                            <div class="flex-1">
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-500">ID</label>
+                                        <p class="text-gray-900">${user.id}</p>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-500">用户名</label>
+                                        <p class="text-gray-900">${escapeHtml(user.username)}</p>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-500">管理员</label>
+                                        <p>${user.isAdmin 
+                                            ? '<span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs">是</span>' 
+                                            : '<span class="px-2 py-1 bg-gray-100 text-gray-600 rounded-full text-xs">否</span>'}
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-500">创建时间</label>
+                                        <p class="text-gray-900">${formatDate(user.createdAt)}</p>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-500">更新时间</label>
+                                        <p class="text-gray-900">${formatDate(user.updatedAt)}</p>
+                                    </div>
+                                    <div class="col-span-2">
+                                        <label class="block text-sm font-medium text-gray-500">简介</label>
+                                        <p class="text-gray-900">${escapeHtml(user.bio) || '-'}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    
+                    // Store user data for edit
+                    window.userData = user;
+                } else {
+                    document.getElementById('userContent').innerHTML = `<p class="text-center text-red-500">${user.error || '加载失败'}</p>`;
+                }
+            } catch (err) {
+                document.getElementById('userContent').innerHTML = '<p class="text-center text-red-500">网络错误</p>';
+            }
+        }
+        
+        // Load user's diaries
+        async function loadDiaries() {
+            try {
+                const response = await fetch(`${API_BASE}/diaries?limit=10`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await response.json();
+                
+                if (response.ok) {
+                    // Filter diaries by userId
+                    const diaries = data.items.filter(d => d.userId === userId);
+                    
+                    if (diaries.length === 0) {
+                        document.getElementById('diariesContent').innerHTML = '<p class="text-center text-gray-500">该用户暂无日记</p>';
+                        return;
+                    }
+                    
+                    document.getElementById('diariesContent').innerHTML = `
+                        <div class="space-y-4">
+                            ${diaries.map(d => `
+                                <div class="border rounded-lg p-4 hover:bg-gray-50">
+                                    <div class="flex justify-between items-start">
+                                        <div>
+                                            <h3 class="font-medium text-gray-900">${escapeHtml(d.title)}</h3>
+                                            <p class="text-sm text-gray-500 mt-1 line-clamp-2">${escapeHtml(d.content || '-')}</p>
+                                            <p class="text-xs text-gray-400 mt-2">${formatDate(d.createdAt)}</p>
+                                        </div>
+                                        <a href="/admin/diaries/${d.id}" class="text-blue-500 hover:text-blue-700 text-sm">查看详情</a>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+                }
+            } catch (err) {
+                document.getElementById('diariesContent').innerHTML = '<p class="text-center text-red-500">加载失败</p>';
+            }
+        }
+        
+        // Edit modal functions
+        function openEditModal() {
+            const user = window.userData;
+            if (!user) return;
+            
+            document.getElementById('editUsername').value = user.username;
+            document.getElementById('editPassword').value = '';
+            document.getElementById('editAvatar').value = user.avatar || '';
+            document.getElementById('editBio').value = user.bio || '';
+            document.getElementById('editIsAdmin').checked = user.isAdmin;
+            
+            document.getElementById('editModal').classList.remove('hidden');
+            document.getElementById('editModal').classList.add('flex');
+        }
+        
+        function closeEditModal() {
+            document.getElementById('editModal').classList.add('hidden');
+            document.getElementById('editModal').classList.remove('flex');
+        }
+        
+        document.getElementById('editForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const password = document.getElementById('editPassword').value;
+            const avatar = document.getElementById('editAvatar').value;
+            const bio = document.getElementById('editBio').value;
+            const isAdmin = document.getElementById('editIsAdmin').checked;
+            
+            const updateData = { avatar, bio, isAdmin };
+            if (password) {
+                updateData.password = password;
+            }
+            
+            try {
+                const response = await fetch(`${API_BASE}/admin/users/${userId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(updateData)
+                });
+                
+                if (response.ok) {
+                    closeEditModal();
+                    loadUser();
+                } else {
+                    const data = await response.json();
+                    alert('更新失败: ' + data.error);
+                }
+            } catch (err) {
+                alert('网络错误');
+            }
+        });
+        
+        // Delete user
+        async function deleteUser() {
+            if (!confirm('确定要删除此用户吗？此操作不可恢复。')) return;
+            
+            try {
+                const response = await fetch(`${API_BASE}/admin/users/${userId}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                
+                if (response.ok) {
+                    window.location.href = '/admin/users';
+                } else {
+                    const data = await response.json();
+                    alert('删除失败: ' + data.error);
+                }
+            } catch (err) {
+                alert('网络错误');
+            }
+        }
+        
+        function logout() {
+            localStorage.clear();
+            window.location.href = '/admin/login';
+        }
+        
+        // Utils
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        function formatDate(dateStr) {
+            if (!dateStr) return '-';
+            const date = new Date(dateStr);
+            return date.toLocaleString('zh-CN');
+        }
+        
+        // Init
+        if (checkAuth()) {
+            userId = getUserId();
+            loadUser();
+            loadDiaries();
+        }
+    </script>
+</body>
+</html>

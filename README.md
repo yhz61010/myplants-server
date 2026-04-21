@@ -17,12 +17,12 @@ myplants-server/
 │       └── main.go               # 应用程序入口点，初始化服务器和路由
 ├── internal/                     # 私有代码目录（避免外部包导入）
 │   ├── handlers/                 # HTTP 请求处理器
-│   │   ├── diary.go              # 日记相关 API 处理器（如上传、查询日记）
+│   │   ├── content.go            # 内容相关 API 处理器（日记/植物的 CRUD）
+│   │   ├── upload.go             # 图片上传处理器
 │   │   └── user.go               # 用户相关 API 处理器（如登录、资料管理）
 │   ├── models/                   # 数据模型定义
-│   │   ├── diary.go              # 日记数据结构（GORM 模型）
+│   │   ├── content.go            # 统一内容数据结构（GORM 模型，支持 diary/plant 类型）
 │   │   └── user.go               # 用户数据结构（GORM 模型）
-│   ├── database/                 # 数据库相关
 │   │   └── db.go                 # 数据库连接、迁移和初始化（SQLite + GORM）
 │   ├── middleware/               # 中间件组件
 │   │   ├── auth.go               # 认证中间件（JWT 或会话）
@@ -66,6 +66,18 @@ myplants-server/
 	- `UPYUN_BUCKET`（例如 `myplants`）
 	- `UPYUN_OPERATOR`
 	- `UPYUN_PASSWORD`
+
+运行说明（示例）：
+
+```bash
+export JWT_SECRET="your_super_secret"
+export UPYUN_BUCKET="myplants"
+export UPYUN_OPERATOR="op"
+export UPYUN_PASSWORD="password"
+GIN_MODE=release go run cmd/myplants-server/main.go
+```
+
+备注：服务启动时会在项目根目录创建或使用 `myplants.db` 文件；如果你在不同工作目录启动服务，可能会看到不同的 SQLite 文件，因此建议在项目根目录执行运行命令以避免混淆。
 
 运行（示例）：
 
