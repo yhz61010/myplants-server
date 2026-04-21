@@ -84,9 +84,9 @@ gin.SetMode(gin.ReleaseMode)
 ###
 为什么 auth.go 和 user.go 这两个文件中，都需要用到 JWT_SECRET？
 
+## 以下为 Claude 对话
+
+###
+我想在 Web 页面的新增日记时,增加上传图片功能,现在的方式不好.并且希望支持拖拽上传. @templates/diaries.html 
 
 
-
-
-
-将上传处理改为先写临时文件再用 SDK 的 LocalPath 上传（支持断点续传及 MD5）。
