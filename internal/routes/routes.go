@@ -33,5 +33,11 @@ func SetupRoutes(router *gin.Engine) {
 
 		// Upload endpoint for images (stores URL only)
 		api.POST("/upload", handlers.UploadImage)
+
+		// User management
+		api.GET("/users", handlers.ListUsers)
+		api.GET("/users/:id", handlers.GetUser)
+		api.PUT("/users/:id", handlers.UpdateUser)
+		api.DELETE("/users/:id", handlers.DeleteUser)
 	}
 }

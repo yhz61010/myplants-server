@@ -1,12 +1,15 @@
 package handlers
 
 import (
+	"fmt"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
 	"golang.org/x/crypto/bcrypt"
+	"gorm.io/gorm"
 
 	"myplants-server/internal/database"
 	"myplants-server/internal/models"
@@ -111,4 +114,134 @@ func Login(c *gin.Context) {
 			"bio":      user.Bio,
 		},
 	})
+}
+
+// ListUsers handles GET /api/users with pagination
+func ListUsers(c *gin.Context) {
+	limitStr := c.DefaultQuery("limit", "10")
+	offsetStr := c.DefaultQuery("offset", "0")
+
+	limit, err := strconv.Atoi(limitStr)
+	if err != nil || limit <= 0 {
+		limit = 10
+	}
+	if limit > 50 {
+		limit = 50
+	}
+	offset, err := strconv.Atoi(offsetStr)
+	if err != nil || offset < 0 {
+		offset = 0
+	}
+
+	db := database.GetDB()
+	var users []models.User
+	var total int64
+	db.Model(&models.User{}).Count(&total)
+	if err := db.Limit(limit).Offset(offset).Find(&users).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "db error"})
+		return
+	}
+	// strip passwords
+	for i := range users {
+		users[i].Password = ""
+	}
+	c.JSON(http.StatusOK, gin.H{"items": users, "total": total})
+}
+
+// GetUser handles GET /api/users/:id
+func GetUser(c *gin.Context) {
+	id := c.Param("id")
+	var user models.User
+	if err := database.GetDB().First(&user, id).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			c.JSON(http.StatusNotFound, gin.H{"error": "not found"})
+			return
+		}
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "db error"})
+		return
+	}
+	user.Password = ""
+	c.JSON(http.StatusOK, user)
+}
+
+// UpdateUser handles PUT /api/users/:id
+func UpdateUser(c *gin.Context) {
+	id := c.Param("id")
+	// only allow owner to update
+	uid, _ := c.Get("userId")
+	if uid == nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "unauthorized"})
+		return
+	}
+	if fmt.Sprintf("%v", uid) != id && fmt.Sprintf("%v", uint(uid.(uint))) != id {
+		// allow numeric mismatch handling
+		if uid.(uint) != 0 {
+			if strconv.FormatUint(uint64(uid.(uint)), 10) != id {
+				c.JSON(http.StatusForbidden, gin.H{"error": "forbidden"})
+				return
+			}
+		}
+	}
+
+	var req struct {
+		Avatar   *string `json:"avatar"`
+		Bio      *string `json:"bio"`
+		Password *string `json:"password"`
+	}
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	var user models.User
+	db := database.GetDB()
+	if err := db.First(&user, id).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			c.JSON(http.StatusNotFound, gin.H{"error": "not found"})
+			return
+		}
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "db error"})
+		return
+	}
+
+	if req.Avatar != nil {
+		user.Avatar = *req.Avatar
+	}
+	if req.Bio != nil {
+		user.Bio = *req.Bio
+	}
+	if req.Password != nil {
+		hashed, err := bcrypt.GenerateFromPassword([]byte(*req.Password), bcrypt.DefaultCost)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to hash password"})
+			return
+		}
+		user.Password = string(hashed)
+	}
+
+	if err := db.Save(&user).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to update"})
+		return
+	}
+	user.Password = ""
+	c.JSON(http.StatusOK, user)
+}
+
+// DeleteUser handles DELETE /api/users/:id
+func DeleteUser(c *gin.Context) {
+	id := c.Param("id")
+	uid, _ := c.Get("userId")
+	if uid == nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "unauthorized"})
+		return
+	}
+	if strconv.FormatUint(uint64(uid.(uint)), 10) != id {
+		c.JSON(http.StatusForbidden, gin.H{"error": "forbidden"})
+		return
+	}
+	if err := database.GetDB().Delete(&models.User{}, id).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to delete"})
+		return
+	}
+	c.Status(http.StatusNoContent)
 }
