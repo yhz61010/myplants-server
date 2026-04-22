@@ -37,11 +37,15 @@
             </div>
             
             <!-- Search -->
-            <div class="p-4 border-b bg-gray-50">
-                <input type="text" id="searchInput" placeholder="搜索标题或标签..." 
+            <div class="p-4 border-b bg-gray-50 flex flex-wrap items-center gap-2">
+                <input type="text" id="searchInput" placeholder="搜索标题或标签..."
                     class="w-full md:w-64 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                    onkeyup="if(event.key==='Enter')loadDiaries()">
-                <button onclick="loadDiaries()" class="ml-2 bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-md text-sm">
+                    onkeyup="if(event.key==='Enter'){offset=0;loadDiaries()}">
+                <select id="userFilter" onchange="offset=0;loadDiaries()"
+                    class="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 text-sm">
+                    <option value="">全部用户</option>
+                </select>
+                <button onclick="offset=0;loadDiaries()" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-md text-sm">
                     搜索
                 </button>
             </div>
@@ -52,11 +56,11 @@
                     <thead class="bg-gray-50">
                         <tr>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">标题</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">作者</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">内容预览</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:text-green-600 select-none" onclick="toggleSort('title')">标题 <span id="sortIcon_title"></span></th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:text-green-600 select-none" onclick="toggleSort('userId')">作者 <span id="sortIcon_userId"></span></th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">标签</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">图片</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">创建时间</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:text-green-600 select-none" onclick="toggleSort('createdAt')">创建时间 <span id="sortIcon_createdAt"></span></th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">操作</th>
                         </tr>
                     </thead>
@@ -161,6 +165,8 @@
         let deleteDiaryId = null;
         let usersMap = {};
         let uploadedImages = []; // stores uploaded image URLs
+        let sortField = 'createdAt';
+        let sortOrder = 'desc';
         
         // Check auth
         function checkAuth() {
@@ -189,8 +195,13 @@
                 });
                 const data = await response.json();
                 if (response.ok) {
+                    const select = document.getElementById('userFilter');
                     data.items.forEach(u => {
                         usersMap[u.id] = u.username;
+                        const opt = document.createElement('option');
+                        opt.value = u.id;
+                        opt.textContent = u.username;
+                        select.appendChild(opt);
                     });
                 }
             } catch (err) {
@@ -201,10 +212,15 @@
         // Load diaries
         async function loadDiaries() {
             const query = document.getElementById('searchInput').value;
+            const userFilter = document.getElementById('userFilter').value;
             let url = `${API_BASE}/diaries?limit=${limit}&offset=${offset}`;
             if (query) {
                 url += `&query=${encodeURIComponent(query)}`;
             }
+            if (userFilter) {
+                url += `&userId=${encodeURIComponent(userFilter)}`;
+            }
+            url += `&sort=${sortField}&order=${sortOrder}`;
             
             try {
                 const response = await fetch(url, {
@@ -237,7 +253,7 @@
                     <td class="px-6 py-4 text-sm text-gray-900">${d.id}</td>
                     <td class="px-6 py-4 text-sm font-medium text-gray-900">${escapeHtml(d.title)}</td>
                     <td class="px-6 py-4 text-sm text-gray-500">${usersMap[parseInt(d.userId)] || d.userId}</td>
-                    <td class="px-6 py-4 text-sm text-gray-500 max-w-xs truncate">${escapeHtml(d.content || '-')}</td>
+                    <td class="px-6 py-4 text-sm">${(d.tags && d.tags.length > 0) ? d.tags.map(t => `<span class="inline-block bg-green-100 text-green-700 text-xs px-2 py-0.5 rounded-full mr-1 mb-1">${escapeHtml(t)}</span>`).join('') : '-'}</td>
                     <td class="px-6 py-4 text-sm text-gray-500">
                         ${d.images && d.images.length > 0 
                             ? `<span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs">${d.images.length} 张</span>`
@@ -416,6 +432,30 @@
             window.location.href = '/admin/login';
         }
         
+        // --- Sort ---
+        function toggleSort(field) {
+            if (sortField === field) {
+                sortOrder = sortOrder === 'asc' ? 'desc' : 'asc';
+            } else {
+                sortField = field;
+                sortOrder = 'asc';
+            }
+            offset = 0;
+            updateSortIcons();
+            loadDiaries();
+        }
+
+        function updateSortIcons() {
+            ['title', 'userId', 'createdAt'].forEach(f => {
+                const el = document.getElementById('sortIcon_' + f);
+                if (f === sortField) {
+                    el.textContent = sortOrder === 'asc' ? '\u25B2' : '\u25BC';
+                } else {
+                    el.textContent = '';
+                }
+            });
+        }
+
         // --- Image upload ---
         const dropZone = document.getElementById('dropZone');
 
@@ -499,11 +539,18 @@
         function formatDate(dateStr) {
             if (!dateStr) return '-';
             const date = new Date(dateStr);
-            return date.toLocaleString('zh-CN');
+            const y = date.getFullYear();
+            const M = String(date.getMonth() + 1).padStart(2, '0');
+            const d = String(date.getDate()).padStart(2, '0');
+            const h = String(date.getHours()).padStart(2, '0');
+            const m = String(date.getMinutes()).padStart(2, '0');
+            const s = String(date.getSeconds()).padStart(2, '0');
+            return `${y}/${M}/${d} ${h}:${m}:${s}`;
         }
         
         // Init
         if (checkAuth()) {
+            updateSortIcons();
             loadUsers().then(() => loadDiaries());
         }
     </script>

@@ -126,6 +126,7 @@ func CreateDiary(c *gin.Context) {
 func ListDiaries(c *gin.Context) {
 	// reuse ListContents logic by forcing type=diary
 	q := c.Query("query")
+	userID := c.Query("userId")
 	limitStr := c.DefaultQuery("limit", "10")
 	offsetStr := c.DefaultQuery("offset", "0")
 
@@ -144,14 +145,34 @@ func ListDiaries(c *gin.Context) {
 	db := database.GetDB()
 	var items []models.Content
 	query := db.Model(&models.Content{}).Where("type = ?", "diary")
+	if userID != "" {
+		query = query.Where("user_id = ?", userID)
+	}
 	if q != "" {
 		like := "%" + q + "%"
 		query = query.Where("title LIKE ? OR tags LIKE ?", like, like)
 	}
+
+	// Sort support: allowed fields mapped to DB columns
+	allowedSort := map[string]string{
+		"title":     "title",
+		"userId":    "user_id",
+		"createdAt": "created_at",
+	}
+	sortField := c.DefaultQuery("sort", "createdAt")
+	sortOrder := c.DefaultQuery("order", "desc")
+	col, ok := allowedSort[sortField]
+	if !ok {
+		col = "created_at"
+	}
+	if sortOrder != "asc" {
+		sortOrder = "desc"
+	}
+
 	var total int64
 	query.Count(&total)
 
-	if err := query.Order("created_at desc").Limit(limit).Offset(offset).Find(&items).Error; err != nil {
+	if err := query.Order(col + " " + sortOrder).Limit(limit).Offset(offset).Find(&items).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "db error"})
 		return
 	}

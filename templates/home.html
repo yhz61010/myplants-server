@@ -76,9 +76,7 @@
         }
 
         function renderCard(item) {
-            const date = new Date(item.createdAt).toLocaleDateString('zh-CN', {
-                year: 'numeric', month: 'long', day: 'numeric'
-            });
+            const date = formatDate(item.createdAt);
 
             const tags = (item.tags || []).map(t =>
                 `<span class="inline-block bg-green-100 text-green-700 text-xs px-2 py-0.5 rounded-full">${escapeHtml(t)}</span>`
@@ -101,6 +99,17 @@
                     ${tags ? `<div class="flex flex-wrap gap-1.5 mt-3">${tags}</div>` : ''}
                 </article>
             `;
+        }
+
+        function formatDate(str) {
+            const dt = new Date(str);
+            const y = dt.getFullYear();
+            const M = String(dt.getMonth() + 1).padStart(2, '0');
+            const d = String(dt.getDate()).padStart(2, '0');
+            const h = String(dt.getHours()).padStart(2, '0');
+            const m = String(dt.getMinutes()).padStart(2, '0');
+            const s = String(dt.getSeconds()).padStart(2, '0');
+            return `${y}/${M}/${d} ${h}:${m}:${s}`;
         }
 
         function escapeHtml(text) {

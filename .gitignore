@@ -56,3 +56,4 @@ docker-compose.override.yml
 
 # Windows
 Thumbs.db
+uploads/
