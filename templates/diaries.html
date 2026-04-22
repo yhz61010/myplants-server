@@ -127,6 +127,13 @@
                     <input type="text" id="formTags" placeholder="番茄, 种植, 栽培"
                         class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
                 </div>
+                <div class="flex items-center">
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" id="formIsPublic" class="sr-only peer" checked>
+                        <div class="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-green-500"></div>
+                        <span class="ml-2 text-sm text-gray-700">公开</span>
+                    </label>
+                </div>
                 <div class="flex justify-end space-x-3 pt-4">
                     <button type="button" onclick="closeModal()" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-md text-sm">取消</button>
                     <button type="submit" class="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-md text-sm">保存</button>
@@ -276,6 +283,7 @@
             document.getElementById('formTitle').value = '';
             document.getElementById('formContent').value = '';
             document.getElementById('formTags').value = '';
+            document.getElementById('formIsPublic').checked = true;
             uploadedImages = [];
             renderImagePreview();
             document.getElementById('diaryModal').classList.remove('hidden');
@@ -295,6 +303,7 @@
                     document.getElementById('formTitle').value = diary.title;
                     document.getElementById('formContent').value = diary.content || '';
                     document.getElementById('formTags').value = (diary.tags || []).join(', ');
+                    document.getElementById('formIsPublic').checked = diary.isPublic !== false;
                     uploadedImages = diary.images || [];
                     renderImagePreview();
                     document.getElementById('diaryModal').classList.remove('hidden');
@@ -323,7 +332,8 @@
 
             const images = [...uploadedImages];
             const tags = tagsText.split(',').map(s => s.trim()).filter(s => s);
-            
+            const isPublic = document.getElementById('formIsPublic').checked;
+
             const isEdit = !!id;
             
             try {
@@ -335,7 +345,7 @@
                             'Authorization': `Bearer ${token}`,
                             'Content-Type': 'application/json'
                         },
-                        body: JSON.stringify({ title, content, images, tags })
+                        body: JSON.stringify({ title, content, images, tags, isPublic })
                     });
                 } else {
                     response = await fetch(`${API_BASE}/admin/diaries`, {
@@ -344,7 +354,7 @@
                             'Authorization': `Bearer ${token}`,
                             'Content-Type': 'application/json'
                         },
-                        body: JSON.stringify({ title, content, images, tags })
+                        body: JSON.stringify({ title, content, images, tags, isPublic })
                     });
                 }
                 

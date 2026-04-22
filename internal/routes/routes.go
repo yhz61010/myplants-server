@@ -29,6 +29,15 @@ func SetupRoutes(router *gin.Engine) {
 		c.File("./templates/diary_detail.html")
 	})
 
+	// Public homepage
+	router.StaticFile("/", "./templates/home.html")
+
+	// Public API (no auth required)
+	public := router.Group("/api/public")
+	{
+		public.GET("/diaries", handlers.ListPublicDiaries)
+	}
+
 	// Public routes
 	auth := router.Group("/api/auth")
 	{

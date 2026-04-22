@@ -251,10 +251,11 @@ type AdminUpdateUserRequest struct {
 
 // AdminUpdateDiaryRequest for admin diary updates
 type AdminUpdateDiaryRequest struct {
-	Title   *string   `json:"title"`
-	Content *string   `json:"content"`
-	Images  *[]string `json:"images"`
-	Tags    *[]string `json:"tags"`
+	Title    *string   `json:"title"`
+	Content  *string   `json:"content"`
+	Images   *[]string `json:"images"`
+	Tags     *[]string `json:"tags"`
+	IsPublic *bool     `json:"isPublic"`
 }
 
 // AdminCreateDiaryRequest for admin diary creation
@@ -263,6 +264,7 @@ type AdminCreateDiaryRequest struct {
 	Content    string   `json:"content"`
 	Images     []string `json:"images"`
 	Tags       []string `json:"tags"`
+	IsPublic   bool     `json:"isPublic"`
 	UserID     string   `json:"userId"` // Optional: specify user, defaults to admin
 	CreateTime string   `json:"createTime"`
 }
@@ -393,12 +395,13 @@ func AdminCreateDiary(c *gin.Context) {
 	}
 
 	content := models.Content{
-		Type:    "diary",
-		UserID:  userID,
-		Title:   req.Title,
-		Content: req.Content,
-		Images:  req.Images,
-		Tags:    req.Tags,
+		Type:     "diary",
+		UserID:   userID,
+		Title:    req.Title,
+		Content:  req.Content,
+		Images:   req.Images,
+		Tags:     req.Tags,
+		IsPublic: req.IsPublic,
 	}
 
 	if err := database.GetDB().Create(&content).Error; err != nil {
@@ -444,6 +447,9 @@ func AdminUpdateDiary(c *gin.Context) {
 	}
 	if req.Tags != nil {
 		content.Tags = *req.Tags
+	}
+	if req.IsPublic != nil {
+		content.IsPublic = *req.IsPublic
 	}
 
 	if err := db.Save(&content).Error; err != nil {

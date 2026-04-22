@@ -25,10 +25,11 @@ type CreateContentRequest struct {
 
 // UpdateContentRequest payload
 type UpdateContentRequest struct {
-	Title   *string   `json:"title"`
-	Content *string   `json:"content"`
-	Images  *[]string `json:"images"`
-	Tags    *[]string `json:"tags"`
+	Title    *string   `json:"title"`
+	Content  *string   `json:"content"`
+	Images   *[]string `json:"images"`
+	Tags     *[]string `json:"tags"`
+	IsPublic *bool     `json:"isPublic"`
 }
 
 // CreateContent handles POST /api/contents
@@ -76,6 +77,7 @@ func CreateDiary(c *gin.Context) {
 		Content    string   `json:"content"`
 		Images     []string `json:"images"`
 		Tags       []string `json:"tags"`
+		IsPublic   bool     `json:"isPublic"`
 		CreateTime string   `json:"createTime"`
 	}
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -109,6 +111,7 @@ func CreateDiary(c *gin.Context) {
 		Content:   req.Content,
 		Images:    req.Images,
 		Tags:      req.Tags,
+		IsPublic:  req.IsPublic,
 		CreatedAt: createdAt,
 	}
 
@@ -216,6 +219,9 @@ func UpdateDiary(c *gin.Context) {
 	if req.Tags != nil {
 		content.Tags = *req.Tags
 	}
+	if req.IsPublic != nil {
+		content.IsPublic = *req.IsPublic
+	}
 
 	if err := db.Save(&content).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to update"})
@@ -301,6 +307,9 @@ func UpdateContent(c *gin.Context) {
 	if req.Tags != nil {
 		content.Tags = *req.Tags
 	}
+	if req.IsPublic != nil {
+		content.IsPublic = *req.IsPublic
+	}
 
 	if err := db.Save(&content).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to update"})
@@ -318,6 +327,41 @@ func DeleteContent(c *gin.Context) {
 		return
 	}
 	c.Status(http.StatusNoContent)
+}
+
+// ListPublicDiaries handles GET /api/public/diaries (no auth required)
+func ListPublicDiaries(c *gin.Context) {
+	q := c.Query("query")
+	limitStr := c.DefaultQuery("limit", "10")
+	offsetStr := c.DefaultQuery("offset", "0")
+
+	limit, err := strconv.Atoi(limitStr)
+	if err != nil || limit <= 0 {
+		limit = 10
+	}
+	if limit > 50 {
+		limit = 50
+	}
+	offset, err := strconv.Atoi(offsetStr)
+	if err != nil || offset < 0 {
+		offset = 0
+	}
+
+	db := database.GetDB()
+	var items []models.Content
+	query := db.Model(&models.Content{}).Where("type = ? AND is_public = ?", "diary", true)
+	if q != "" {
+		like := "%" + q + "%"
+		query = query.Where("title LIKE ? OR tags LIKE ?", like, like)
+	}
+	var total int64
+	query.Count(&total)
+
+	if err := query.Order("created_at desc").Limit(limit).Offset(offset).Find(&items).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "db error"})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"items": items, "total": total})
 }
 
 // ListContents handles GET /api/contents

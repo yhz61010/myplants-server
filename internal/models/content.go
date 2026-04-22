@@ -18,6 +18,7 @@ type Content struct {
 	TagsStr   string         `json:"-" gorm:"column:tags"`   // Store as JSON string
 	Images    []string       `json:"images" gorm:"-"`        // Computed field
 	Tags      []string       `json:"tags" gorm:"-"`          // Computed field
+	IsPublic  bool           `json:"isPublic" gorm:"default:true"`
 	CreatedAt time.Time      `json:"createdAt"`
 	UpdatedAt time.Time      `json:"updatedAt"`
 	DeletedAt gorm.DeletedAt `json:"-" gorm:"index"`

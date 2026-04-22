@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyPlants - 植物栽培分享</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Header -->
+    <header class="bg-white shadow-sm sticky top-0 z-10">
+        <div class="max-w-3xl mx-auto px-4 py-4 flex items-center justify-between">
+            <h1 class="text-xl font-bold text-green-600">MyPlants</h1>
+            <a href="/admin/login" class="text-sm text-gray-500 hover:text-green-600">管理登录</a>
+        </div>
+    </header>
+
+    <!-- Feed -->
+    <main class="max-w-3xl mx-auto px-4 py-6">
+        <div id="feed" class="space-y-6"></div>
+
+        <div id="loadMore" class="hidden text-center py-6">
+            <button onclick="loadDiaries()"
+                class="px-6 py-2 bg-green-500 hover:bg-green-600 text-white rounded-full text-sm transition-colors">
+                加载更多
+            </button>
+        </div>
+
+        <div id="empty" class="hidden text-center py-20 text-gray-400">
+            <p class="text-lg">暂无公开日记</p>
+        </div>
+
+        <div id="loading" class="text-center py-10">
+            <svg class="animate-spin h-8 w-8 mx-auto text-green-500" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+            </svg>
+        </div>
+    </main>
+
+    <!-- Lightbox -->
+    <div id="lightbox" class="fixed inset-0 bg-black bg-opacity-90 hidden items-center justify-center z-50 cursor-pointer" onclick="closeLightbox()">
+        <button class="absolute top-4 right-4 text-white text-3xl hover:text-gray-300">&times;</button>
+        <img id="lightboxImg" class="max-w-[90vw] max-h-[90vh] object-contain rounded-lg">
+    </div>
+
+    <script>
+        const API_BASE = window.location.origin + '/api/public';
+        let offset = 0;
+        const limit = 10;
+        let total = 0;
+
+        async function loadDiaries() {
+            const resp = await fetch(`${API_BASE}/diaries?limit=${limit}&offset=${offset}`);
+            if (!resp.ok) return;
+            const data = await resp.json();
+            total = data.total;
+            const items = data.items || [];
+
+            const feed = document.getElementById('feed');
+            items.forEach(item => {
+                feed.insertAdjacentHTML('beforeend', renderCard(item));
+            });
+
+            offset += items.length;
+
+            document.getElementById('loading').classList.add('hidden');
+            if (offset < total) {
+                document.getElementById('loadMore').classList.remove('hidden');
+            } else {
+                document.getElementById('loadMore').classList.add('hidden');
+            }
+            if (offset === 0) {
+                document.getElementById('empty').classList.remove('hidden');
+            }
+        }
+
+        function renderCard(item) {
+            const date = new Date(item.createdAt).toLocaleDateString('zh-CN', {
+                year: 'numeric', month: 'long', day: 'numeric'
+            });
+
+            const tags = (item.tags || []).map(t =>
+                `<span class="inline-block bg-green-100 text-green-700 text-xs px-2 py-0.5 rounded-full">${escapeHtml(t)}</span>`
+            ).join(' ');
+
+            const images = (item.images || []).map(url =>
+                `<img src="${escapeHtml(url)}" class="w-full h-48 object-cover rounded-lg cursor-pointer hover:opacity-90 transition-opacity" onclick="openLightbox('${escapeHtml(url)}')" onerror="this.style.display='none'">`
+            ).join('');
+
+            const imageGrid = images ? `<div class="grid grid-cols-2 md:grid-cols-3 gap-2 mt-3">${images}</div>` : '';
+
+            return `
+                <article class="bg-white rounded-xl shadow-sm p-5 hover:shadow-md transition-shadow">
+                    <div class="flex items-center justify-between mb-3">
+                        <h2 class="text-lg font-semibold text-gray-800">${escapeHtml(item.title)}</h2>
+                        <time class="text-xs text-gray-400">${date}</time>
+                    </div>
+                    ${item.content ? `<p class="text-gray-600 text-sm leading-relaxed whitespace-pre-line">${escapeHtml(item.content)}</p>` : ''}
+                    ${imageGrid}
+                    ${tags ? `<div class="flex flex-wrap gap-1.5 mt-3">${tags}</div>` : ''}
+                </article>
+            `;
+        }
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            const d = document.createElement('div');
+            d.textContent = text;
+            return d.innerHTML;
+        }
+
+        function openLightbox(url) {
+            document.getElementById('lightboxImg').src = url;
+            document.getElementById('lightbox').classList.remove('hidden');
+            document.getElementById('lightbox').classList.add('flex');
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightbox').classList.add('hidden');
+            document.getElementById('lightbox').classList.remove('flex');
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeLightbox();
+        });
+
+        loadDiaries();
+    </script>
+</body>
+</html>

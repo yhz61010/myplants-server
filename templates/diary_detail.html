@@ -95,6 +95,13 @@
                     <input type="text" id="editTags"
                         class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
                 </div>
+                <div class="flex items-center">
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" id="editIsPublic" class="sr-only peer" checked>
+                        <div class="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-green-500"></div>
+                        <span class="ml-2 text-sm text-gray-700">公开</span>
+                    </label>
+                </div>
                 <div class="flex justify-end space-x-3 pt-4">
                     <button type="button" onclick="closeEditModal()" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-md text-sm">取消</button>
                     <button type="submit" class="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-md text-sm">保存</button>
@@ -249,6 +256,7 @@
             document.getElementById('editTitle').value = diary.title;
             document.getElementById('editContent').value = diary.content || '';
             document.getElementById('editTags').value = (diary.tags || []).join(', ');
+            document.getElementById('editIsPublic').checked = diary.isPublic !== false;
             uploadedImages = [...(diary.images || [])];
             renderImagePreview();
 
@@ -270,7 +278,8 @@
 
             const images = [...uploadedImages];
             const tags = tagsText.split(',').map(s => s.trim()).filter(s => s);
-            
+            const isPublic = document.getElementById('editIsPublic').checked;
+
             try {
                 const response = await fetch(`${API_BASE}/admin/diaries/${diaryId}`, {
                     method: 'PUT',
@@ -278,7 +287,7 @@
                         'Authorization': `Bearer ${token}`,
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ title, content, images, tags })
+                    body: JSON.stringify({ title, content, images, tags, isPublic })
                 });
                 
                 if (response.ok) {
