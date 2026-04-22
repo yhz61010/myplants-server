@@ -16,6 +16,7 @@ func SetupRoutes(router *gin.Engine) {
 	// Admin page routes - serve HTML files. Use StaticFile for exact paths
 	// to ensure serving works even if working dir differs.
 	router.StaticFile("/admin", "./templates/login.html")
+	router.StaticFile("/admin/login", "./templates/login.html")
 	router.StaticFile("/admin/login.html", "./templates/login.html")
 	router.StaticFile("/admin/", "./templates/index.html")
 	router.StaticFile("/admin/users", "./templates/users.html")
