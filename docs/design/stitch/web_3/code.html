@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+
+<html lang="zh"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Silver Lady Fern - Digital Conservatory</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&amp;family=Manrope:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary": "#ffffff",
+                        "surface-bright": "#f8faf7",
+                        "tertiary-container": "#77a67a",
+                        "outline": "#6f7a6b",
+                        "on-secondary-container": "#795548",
+                        "surface-container-highest": "#e1e3e0",
+                        "primary": "#006e1c",
+                        "surface-container-lowest": "#ffffff",
+                        "on-primary-fixed": "#002204",
+                        "background": "#f8faf7",
+                        "primary-container": "#4caf50",
+                        "on-tertiary-fixed": "#002109",
+                        "surface-container": "#eceeeb",
+                        "tertiary-fixed": "#bdefbe",
+                        "on-background": "#191c1b",
+                        "secondary-fixed": "#ffdbcf",
+                        "error": "#ba1a1a",
+                        "on-tertiary-fixed-variant": "#24502c",
+                        "on-primary-fixed-variant": "#005313",
+                        "secondary-container": "#fdcdbc",
+                        "surface-container-low": "#f2f4f1",
+                        "on-secondary-fixed": "#2e150b",
+                        "secondary-fixed-dim": "#ebbcac",
+                        "surface-tint": "#006e1c",
+                        "inverse-surface": "#2e312f",
+                        "outline-variant": "#becab9",
+                        "on-primary-container": "#003c0b",
+                        "secondary": "#7a5649",
+                        "on-tertiary-container": "#0d3b19",
+                        "primary-fixed-dim": "#78dc77",
+                        "surface": "#f8faf7",
+                        "surface-container-high": "#e7e9e6",
+                        "on-secondary": "#ffffff",
+                        "inverse-primary": "#78dc77",
+                        "on-tertiary": "#ffffff",
+                        "primary-fixed": "#94f990",
+                        "on-secondary-fixed-variant": "#603f33",
+                        "on-error": "#ffffff",
+                        "tertiary": "#3c6842",
+                        "surface-dim": "#d8dbd8",
+                        "tertiary-fixed-dim": "#a2d3a4",
+                        "on-surface-variant": "#3f4a3c",
+                        "on-error-container": "#93000a",
+                        "error-container": "#ffdad6",
+                        "surface-variant": "#e1e3e0",
+                        "on-surface": "#191c1b",
+                        "inverse-on-surface": "#eff1ee"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Plus Jakarta Sans"],
+                        "display": ["Plus Jakarta Sans"],
+                        "body": ["Manrope"],
+                        "label": ["Manrope"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { font-family: 'Manrope', sans-serif; background-color: #f8faf7; color: #191c1b; }
+        h1, h2, h3, h4, h5, h6, .font-headline { font-family: 'Plus Jakarta Sans', sans-serif; }
+    </style>
+</head>
+<body class="bg-background text-on-background flex h-screen overflow-hidden antialiased">
+<!-- SideNavBar (Shared Component) -->
+<nav class="hidden md:flex flex-col h-full pt-20 bg-stone-50 dark:bg-stone-950 w-72 fixed left-0 top-0 border-r border-stone-200/50 dark:border-stone-800/50 z-40">
+<div class="px-6 pb-8">
+<h1 class="text-xl font-bold text-emerald-900 dark:text-emerald-100 mb-8 font-headline">The Conservatory</h1>
+<p class="text-sm font-medium tracking-wide text-stone-500 mb-8">Botanical Community</p>
+<div class="space-y-6">
+<!-- Home (Inactive) -->
+<a class="text-stone-400 dark:text-stone-500 flex items-center gap-3 hover:bg-stone-100 dark:hover:bg-stone-900 rounded-xl px-4 py-3 transition-all font-body text-sm font-medium tracking-wide" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">home</span>
+                    Home
+                </a>
+<!-- Explore (Active - Implicit Intent) -->
+<a class="text-emerald-900 dark:text-emerald-100 font-bold flex items-center gap-3 hover:bg-stone-100 dark:hover:bg-stone-900 rounded-xl px-4 py-3 transition-all font-body text-sm tracking-wide" href="#">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">potted_plant</span>
+                    Explore
+                </a>
+<!-- Encyclopedia (Inactive) -->
+<a class="text-stone-400 dark:text-stone-500 flex items-center gap-3 hover:bg-stone-100 dark:hover:bg-stone-900 rounded-xl px-4 py-3 transition-all font-body text-sm font-medium tracking-wide" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">menu_book</span>
+                    Encyclopedia
+                </a>
+<!-- Post (Inactive) -->
+<a class="text-stone-400 dark:text-stone-500 flex items-center gap-3 hover:bg-stone-100 dark:hover:bg-stone-900 rounded-xl px-4 py-3 transition-all font-body text-sm font-medium tracking-wide" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">add_box</span>
+                    Post
+                </a>
+<!-- Profile (Inactive) -->
+<a class="text-stone-400 dark:text-stone-500 flex items-center gap-3 hover:bg-stone-100 dark:hover:bg-stone-900 rounded-xl px-4 py-3 transition-all font-body text-sm font-medium tracking-wide" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">account_circle</span>
+                    Profile
+                </a>
+</div>
+</div>
+<div class="mt-auto p-6">
+<button class="w-full bg-primary text-on-primary rounded-full py-3 px-4 font-label font-bold hover:bg-primary-container transition-colors shadow-sm">
+                Share your Bloom
+            </button>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="flex-1 md:ml-72 h-full overflow-y-auto relative">
+<!-- Optional Top Nav for Mobile could go here if needed, but per instructions keeping focused on desktop -->
+<div class="max-w-7xl mx-auto px-8 py-12 lg:py-20 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
+<!-- Left Column: Image Gallery -->
+<div class="lg:col-span-7 flex flex-col gap-6">
+<!-- Main Image -->
+<div class="relative w-full aspect-[4/5] rounded-xl overflow-hidden bg-surface-container-low group">
+<img alt="Detailed close-up of Silver Lady Fern fronds showing intricate silver patterns on green leaves" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="Macro photography of delicate silver-patterned fern fronds with soft dappled sunlight and deep green background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCilqxQEgYYy3DHS5A__glfUTGbLIlM9O0A6h-mM8-4bcSNm8AqXVOGYBnlchdJxN5vxAJQwwmIh8Ys-M0DwGSjToaPVaNaQpRedO81LkhnuGczPv8vMrQtiwp0CA5GXrVH6aAvGyzFnb-XpMY_fJt0VGG-E2fc6V8kZBQCoCrEBIdg5w08l_UDdZGPtdX3niHcCnkZfgQfg_E6l9QOM_WJCz-h2RG-1ofd0nPbcyPFOlogOcP_3f7mxhCoQCgWMSmzTmHX2lpp5F4"/>
+<!-- Navigation Arrows -->
+<button class="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-surface/70 backdrop-blur-md flex items-center justify-center text-on-surface hover:bg-surface transition-colors shadow-sm">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<button class="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-surface/70 backdrop-blur-md flex items-center justify-center text-on-surface hover:bg-surface transition-colors shadow-sm">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+<!-- Thumbnails -->
+<div class="flex gap-4 overflow-x-auto pb-2 scrollbar-hide">
+<div class="w-24 h-24 rounded-lg overflow-hidden flex-shrink-0 border-2 border-primary cursor-pointer">
+<img alt="Thumbnail 1" class="w-full h-full object-cover" data-alt="Small thumbnail of silver fern fronds" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBT0Kx5dAcKhBD2z0JTekZye6clQ-LkGtG3HVV7BgTPKC_UJM6iPczRnYXr0ZXe0MoBjCnuL5nzxZjAYFKmjgKyWHa_bFpmp8rUIXvDAs3Ag1jQ4fkF1bKtBW-dp6fZDaRcPHWCzqIyEEVIBZyHtwsuBRgzME7vAQkI2d1K9fCKJ5h8Adq_uHd5t_zj75LE9D_aeiaNLcBZ9Cg2VDlwAQ3ef98cIiz0QXh0uWsW_sdA7rLodP3MmYIMxCO3aMdzGbtUPtt1GwEt0Pw"/>
+</div>
+<div class="w-24 h-24 rounded-lg overflow-hidden flex-shrink-0 opacity-70 hover:opacity-100 transition-opacity cursor-pointer">
+<img alt="Thumbnail 2" class="w-full h-full object-cover" data-alt="Thumbnail of potted silver fern in bright indoor setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAS9thgljpB9ykqIs6cEDe6ZLZ-UGkq3iu96rsyzfT0yz26a4yV0OCu1zPOrYPMu24BK67l2TbgfDQZxgn6Ozq_ubVd4mL9N3hwmZReU6aF5frZEkgmGoENdxSpxnL5T39PgU6F4u7P7OBb7RLNfCODDnMRtFZgsCeD3ONbUNVHr3qZlnss1CHePRn6ZZlwdyTP7M1Xv95q_eXkHF3wIW3jDa-VBBmRlHuJU4b6o1Fx4wAcomHUVCAauS_Lpgyw7Zb9Sj8JmfMyAVY"/>
+</div>
+<div class="w-24 h-24 rounded-lg overflow-hidden flex-shrink-0 opacity-70 hover:opacity-100 transition-opacity cursor-pointer">
+<img alt="Thumbnail 3" class="w-full h-full object-cover" data-alt="Close up of fern leaves uncurling" src="https://lh3.googleusercontent.com/aida-public/AB6AXuACfjIJ5dK-cZTlQ4Hp33ZoO-OP6s0HC2_uo9AZpuIDPdvMabRQ_75lnURgeC_eoiGvsAcCbkZkN-whvwNZIMzXTDzkd4RnM-DB2SmNr8i2Zv6PwF_AtiqBFZ9jSu4MkDzCoNeA_lPeHtwTKw0hJPJaJ9lzCGPQwn2FVDOdKisiuAQ2p0zwVLBCIxWNlYiJH2z9Z-5H8zsUbs-cZNqC_Om68Tnuwmdot-UOrNvq_pG0zRyM8IRPBWUou8ivRsMdVASL-psHU1tR8zU"/>
+</div>
+</div>
+</div>
+<!-- Right Column: Details & Discussion -->
+<div class="lg:col-span-5 flex flex-col gap-10">
+<!-- Header Info -->
+<div class="space-y-4">
+<div class="flex items-center gap-3 mb-2">
+<span class="px-3 py-1 rounded-full bg-secondary-fixed-dim text-on-secondary-fixed font-label text-xs uppercase tracking-widest font-bold">FERNS</span>
+<span class="px-3 py-1 rounded-full bg-surface-container-high text-on-surface-variant font-label text-xs uppercase tracking-widest font-bold">INDOOR</span>
+</div>
+<h1 class="text-5xl font-headline font-extrabold text-on-surface tracking-tight leading-tight">银脉凤尾蕨</h1>
+<p class="text-xl font-body italic text-on-surface-variant">Pteris ensiformis 'Evergemiensis'</p>
+</div>
+<!-- Action Bar -->
+<div class="flex items-center gap-4">
+<button class="flex-1 bg-primary text-on-primary rounded-full py-4 px-6 font-label font-bold text-lg hover:bg-primary-container transition-colors shadow-sm flex justify-center items-center gap-2">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">add</span>
+                        Add to Collection
+                    </button>
+<button class="w-14 h-14 rounded-full border border-outline-variant flex items-center justify-center text-on-surface hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined">bookmark</span>
+</button>
+</div>
+<!-- Care Stats -->
+<div class="bg-surface-container-lowest rounded-xl p-6 shadow-[0_8px_32px_-4px_rgba(25,28,27,0.06)] relative overflow-hidden">
+<div class="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent pointer-events-none"></div>
+<h2 class="text-lg font-headline font-bold text-on-surface mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">psychiatry</span>
+                        Care Requirements
+                    </h2>
+<div class="grid grid-cols-2 gap-6">
+<div class="space-y-2">
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-secondary">water_drop</span>
+<span class="font-label text-sm font-semibold">Watering</span>
+</div>
+<p class="font-body text-on-surface">Keep soil consistently moist. Do not let dry out completely.</p>
+</div>
+<div class="space-y-2">
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-secondary">light_mode</span>
+<span class="font-label text-sm font-semibold">Light</span>
+</div>
+<p class="font-body text-on-surface">Medium to bright indirect light. Avoid direct sun.</p>
+</div>
+</div>
+</div>
+<!-- Care Instructions (养护指南) -->
+<div class="space-y-4">
+<h2 class="text-2xl font-headline font-bold text-on-surface">养护指南</h2>
+<p class="font-body text-on-surface-variant leading-relaxed">
+                        银脉凤尾蕨喜欢温暖湿润的环境。在春夏季节，保持盆土微湿，但避免积水。经常向叶面喷水以增加空气湿度。冬季减少浇水，保持稍微干燥。每月施一次稀薄的液肥即可。注意避免强光直射，以免叶片干枯。
+                    </p>
+</div>
+<!-- Community Discussion (社区讨论) -->
+<div class="pt-8 mt-4 border-t border-surface-container-highest">
+<div class="flex justify-between items-end mb-6">
+<h2 class="text-2xl font-headline font-bold text-on-surface">社区讨论</h2>
+<span class="text-sm font-label text-on-surface-variant font-medium">12 Comments</span>
+</div>
+<!-- Input Area -->
+<div class="flex gap-4 mb-8">
+<div class="w-10 h-10 rounded-full bg-surface-container-high overflow-hidden flex-shrink-0">
+<img alt="User avatar" class="w-full h-full object-cover" data-alt="Portrait of young woman smiling" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCOV10fIY4Eg_1bG_m_dstI-4M56dW8y5_4P8GEVAvjbS2Qo1VKziNglV_AalhQiqvbH54lLMqu5AQIDyAzMkCEvuTDeiuVSfoYPv24ZeRVdRllax7RC8MixStxQlzXYopETA8UJZxSJsLIlCP2mrxzz1sGr_pPDlwP-nryt1WfiFgARi7WvH2Dr-idPvFGMJyzu9ENsgXPX8MzXn3VbguCmWZuemmhFjuOW7QOFUWCq0X4yvwZ-puFQQvSCKju175mBZ5riqA30pk"/>
+</div>
+<div class="flex-1 bg-surface-container-high rounded-xl p-3 focus-within:ring-2 focus-within:ring-primary/20 transition-all">
+<input class="w-full bg-transparent border-none focus:ring-0 font-body text-sm text-on-surface placeholder-on-surface-variant/50" placeholder="Share your experience..." type="text"/>
+</div>
+</div>
+<!-- Comment -->
+<div class="space-y-6">
+<div class="flex gap-4">
+<div class="w-10 h-10 rounded-full bg-surface-container-high overflow-hidden flex-shrink-0">
+<img alt="User avatar" class="w-full h-full object-cover" data-alt="Portrait of man with beard" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAn5dVd6I0wsGaFSwqbjsmJXwA8Rufe1qIH2kfBBCr_B7GORXLIzMZUXbJqHO4I8DhpfqvAsu-hDnqbz9sKK0VcMAlkgRILQ_ov2BXAtQPymnBVgKG2aCnB7M5xTp0eswqHQsS0s2Padl-2dwSBDR2v7g8EEUxvKKOui-0zdm5BdaCvpdaW-AHAsVKmQ2GY4snqUZE2xlVaSLwC5mZy-kZJU_j9qr0ZYgPlZw0lZydQ-JpA1395bv9yVLmbp6LAqNbZ6MjTfn8ys8Q"/>
+</div>
+<div class="flex-1 space-y-2">
+<div class="flex items-center justify-between">
+<span class="font-label font-bold text-on-surface text-sm">PlantLover99</span>
+<span class="font-body text-xs text-on-surface-variant">2 days ago</span>
+</div>
+<p class="font-body text-sm text-on-surface-variant leading-relaxed">
+                                    Mine has been thriving in a self-watering pot near a north-facing window! The silver variegation really pops when the humidity is high.
+                                </p>
+<div class="flex items-center gap-4 pt-2">
+<button class="flex items-center gap-1 text-on-surface-variant hover:text-primary transition-colors text-xs font-label">
+<span class="material-symbols-outlined text-[18px]">thumb_up</span>
+                                        24
+                                    </button>
+<button class="flex items-center gap-1 text-on-surface-variant hover:text-error transition-colors text-xs font-label">
+<span class="material-symbols-outlined text-[18px]">thumb_down</span>
+</button>
+<button class="text-xs font-label font-bold text-on-surface hover:text-primary transition-colors ml-auto">Reply</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

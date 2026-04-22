@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+
+<html class="light" lang="zh-CN"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>The Digital Conservatory - Post</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary": "#ffffff",
+                        "surface-bright": "#f8faf7",
+                        "tertiary-container": "#77a67a",
+                        "outline": "#6f7a6b",
+                        "on-secondary-container": "#795548",
+                        "surface-container-highest": "#e1e3e0",
+                        "primary": "#006e1c",
+                        "surface-container-lowest": "#ffffff",
+                        "on-primary-fixed": "#002204",
+                        "background": "#f8faf7",
+                        "primary-container": "#4caf50",
+                        "on-tertiary-fixed": "#002109",
+                        "surface-container": "#eceeeb",
+                        "tertiary-fixed": "#bdefbe",
+                        "on-background": "#191c1b",
+                        "secondary-fixed": "#ffdbcf",
+                        "error": "#ba1a1a",
+                        "on-tertiary-fixed-variant": "#24502c",
+                        "on-primary-fixed-variant": "#005313",
+                        "secondary-container": "#fdcdbc",
+                        "surface-container-low": "#f2f4f1",
+                        "on-secondary-fixed": "#2e150b",
+                        "secondary-fixed-dim": "#ebbcac",
+                        "surface-tint": "#006e1c",
+                        "inverse-surface": "#2e312f",
+                        "outline-variant": "#becab9",
+                        "on-primary-container": "#003c0b",
+                        "secondary": "#7a5649",
+                        "on-tertiary-container": "#0d3b19",
+                        "primary-fixed-dim": "#78dc77",
+                        "surface": "#f8faf7",
+                        "surface-container-high": "#e7e9e6",
+                        "on-secondary": "#ffffff",
+                        "inverse-primary": "#78dc77",
+                        "on-tertiary": "#ffffff",
+                        "primary-fixed": "#94f990",
+                        "on-secondary-fixed-variant": "#603f33",
+                        "on-error": "#ffffff",
+                        "tertiary": "#3c6842",
+                        "surface-dim": "#d8dbd8",
+                        "tertiary-fixed-dim": "#a2d3a4",
+                        "on-surface-variant": "#3f4a3c",
+                        "on-error-container": "#93000a",
+                        "error-container": "#ffdad6",
+                        "surface-variant": "#e1e3e0",
+                        "on-surface": "#191c1b",
+                        "inverse-on-surface": "#eff1ee"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Plus Jakarta Sans"],
+                        "display": ["Plus Jakarta Sans"],
+                        "body": ["Manrope"],
+                        "label": ["Manrope"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Manrope', sans-serif;
+            background-color: theme('colors.background');
+            color: theme('colors.on-background');
+        }
+        h1, h2, h3, h4, h5, h6, .display, .headline {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .icon-fill {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background min-h-screen flex text-on-background">
+<!-- SideNavBar (Shared Component) -->
+<nav class="hidden md:flex flex-col h-screen w-72 fixed left-0 top-0 border-r border-stone-200/50 dark:border-stone-800/50 bg-stone-50 dark:bg-stone-950 pt-20 px-6 py-10 z-40">
+<div class="mb-8">
+<h1 class="font-headline text-xl font-bold text-emerald-900 dark:text-emerald-100 tracking-tight">The Conservatory</h1>
+<p class="font-body text-sm text-stone-500 dark:text-stone-400 mt-1">Botanical Community</p>
+</div>
+<ul class="space-y-6 flex-1 font-body text-sm font-medium tracking-wide">
+<li>
+<a class="text-stone-400 dark:text-stone-500 flex items-center gap-3 hover:bg-stone-100 dark:hover:bg-stone-900 rounded-xl px-4 py-3 transition-all" href="#">
+<span class="material-symbols-outlined">home</span>
+                    Home
+                </a>
+</li>
+<li>
+<a class="text-stone-400 dark:text-stone-500 flex items-center gap-3 hover:bg-stone-100 dark:hover:bg-stone-900 rounded-xl px-4 py-3 transition-all" href="#">
+<span class="material-symbols-outlined">potted_plant</span>
+                    Explore
+                </a>
+</li>
+<li>
+<a class="text-stone-400 dark:text-stone-500 flex items-center gap-3 hover:bg-stone-100 dark:hover:bg-stone-900 rounded-xl px-4 py-3 transition-all" href="#">
+<span class="material-symbols-outlined">menu_book</span>
+                    Encyclopedia
+                </a>
+</li>
+<li>
+<a class="text-emerald-900 dark:text-emerald-100 font-bold flex items-center gap-3 bg-stone-100 dark:bg-stone-900 rounded-xl px-4 py-3" href="#">
+<span class="material-symbols-outlined icon-fill">add_box</span>
+                    Post
+                </a>
+</li>
+<li>
+<a class="text-stone-400 dark:text-stone-500 flex items-center gap-3 hover:bg-stone-100 dark:hover:bg-stone-900 rounded-xl px-4 py-3 transition-all" href="#">
+<span class="material-symbols-outlined">account_circle</span>
+                    Profile
+                </a>
+</li>
+</ul>
+<div class="mt-auto">
+<button class="w-full bg-primary text-on-primary font-body font-bold py-3 px-4 rounded-full hover:opacity-90 transition-opacity">
+                Share your Bloom
+            </button>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="flex-1 ml-0 md:ml-72 min-h-screen pt-24 px-6 pb-24 md:pt-16 md:px-16 flex justify-center">
+<div class="w-full max-w-4xl">
+<!-- Header -->
+<header class="mb-12 text-center md:text-left">
+<h1 class="font-headline text-4xl md:text-5xl font-extrabold tracking-tight text-on-surface mb-4">记录新植物</h1>
+<p class="font-body text-on-surface-variant text-lg">在数字温室中留下生长的印记</p>
+</header>
+<!-- Content Card -->
+<div class="bg-surface-container-lowest rounded-xl p-8 md:p-12 shadow-[0_32px_64px_-12px_rgba(25,28,27,0.06)] border border-outline-variant/15">
+<form class="space-y-10">
+<!-- Image Upload Area -->
+<div class="w-full">
+<label class="block font-headline font-bold text-on-surface mb-4 text-lg">植物照片</label>
+<div class="relative w-full h-80 rounded-xl bg-surface-container-low border-2 border-dashed border-outline-variant hover:border-primary transition-colors flex flex-col items-center justify-center cursor-pointer overflow-hidden group">
+<!-- Placeholder Content -->
+<div class="text-center z-10 group-hover:scale-105 transition-transform duration-300">
+<span class="material-symbols-outlined text-5xl text-primary mb-3">add_photo_alternate</span>
+<p class="font-body font-semibold text-on-surface">点击或拖拽上传</p>
+<p class="font-body text-sm text-on-surface-variant mt-1">支持 JPG, PNG格式 (最大 5MB)</p>
+</div>
+<!-- Decorative Background Elements -->
+<div class="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-50"></div>
+</div>
+</div>
+<!-- Plant Identity -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<div>
+<label class="block font-headline font-bold text-on-surface mb-2" for="plant-name">植物名称</label>
+<input class="w-full bg-surface-container-high border-none rounded-lg px-4 py-3 font-body text-on-surface placeholder:text-on-surface-variant/50 focus:ring-1 focus:ring-primary focus:outline-none transition-shadow" id="plant-name" placeholder="例如: 龟背竹" type="text"/>
+</div>
+<div>
+<label class="block font-headline font-bold text-on-surface mb-2" for="scientific-name">学名 (选填)</label>
+<input class="w-full bg-surface-container-high border-none rounded-lg px-4 py-3 font-body text-on-surface placeholder:text-on-surface-variant/50 focus:ring-1 focus:ring-primary focus:outline-none transition-shadow italic" id="scientific-name" placeholder="Monstera deliciosa" type="text"/>
+</div>
+</div>
+<!-- Journal Notes -->
+<div>
+<label class="block font-headline font-bold text-on-surface mb-2" for="journal-notes">养护日志</label>
+<textarea class="w-full bg-surface-container-high border-none rounded-lg px-4 py-3 font-body text-on-surface placeholder:text-on-surface-variant/50 focus:ring-1 focus:ring-primary focus:outline-none transition-shadow resize-none" id="journal-notes" placeholder="记录它的生长状态、浇水情况或你的心情..." rows="5"></textarea>
+</div>
+<!-- Tags -->
+<div>
+<label class="block font-headline font-bold text-on-surface mb-3">标签分类</label>
+<div class="flex flex-wrap gap-3">
+<button class="bg-secondary-fixed-dim text-on-secondary-fixed px-5 py-2 rounded-full font-label text-sm uppercase tracking-wider font-semibold transition-transform hover:scale-105 active:scale-95" type="button">观叶植物</button>
+<button class="bg-surface-container-high text-on-surface px-5 py-2 rounded-full font-label text-sm uppercase tracking-wider hover:bg-surface-container-highest transition-colors" type="button">多肉</button>
+<button class="bg-surface-container-high text-on-surface px-5 py-2 rounded-full font-label text-sm uppercase tracking-wider hover:bg-surface-container-highest transition-colors" type="button">水培</button>
+<button class="bg-surface-container-high text-on-surface px-5 py-2 rounded-full font-label text-sm uppercase tracking-wider hover:bg-surface-container-highest transition-colors" type="button">喜阴</button>
+<button class="border border-outline-variant text-on-surface-variant px-5 py-2 rounded-full font-label text-sm flex items-center gap-1 hover:bg-surface-container-low transition-colors" type="button">
+<span class="material-symbols-outlined text-sm">add</span> 自定义
+                            </button>
+</div>
+</div>
+<!-- Actions -->
+<div class="pt-8 flex flex-col md:flex-row items-center justify-end gap-4 border-t border-outline-variant/15">
+<button class="w-full md:w-auto px-8 py-3 rounded-full font-headline font-bold text-on-surface hover:bg-surface-container-high transition-colors" type="button">取消</button>
+<button class="w-full md:w-auto bg-primary text-on-primary px-10 py-3 rounded-full font-headline font-bold hover:bg-on-primary-fixed hover:text-primary-fixed transition-colors shadow-[0_8px_16px_-4px_rgba(0,110,28,0.2)]" type="submit">发布记录</button>
+</div>
+</form>
+</div>
+</div>
+</main>
+</body></html>

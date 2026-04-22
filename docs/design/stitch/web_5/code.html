@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+
+<html lang="zh"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Elena Thorne - 用户主页</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&amp;family=Manrope:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary": "#ffffff",
+                        "surface-bright": "#f8faf7",
+                        "tertiary-container": "#77a67a",
+                        "outline": "#6f7a6b",
+                        "on-secondary-container": "#795548",
+                        "surface-container-highest": "#e1e3e0",
+                        "primary": "#006e1c",
+                        "surface-container-lowest": "#ffffff",
+                        "on-primary-fixed": "#002204",
+                        "background": "#f8faf7",
+                        "primary-container": "#4caf50",
+                        "on-tertiary-fixed": "#002109",
+                        "surface-container": "#eceeeb",
+                        "tertiary-fixed": "#bdefbe",
+                        "on-background": "#191c1b",
+                        "secondary-fixed": "#ffdbcf",
+                        "error": "#ba1a1a",
+                        "on-tertiary-fixed-variant": "#24502c",
+                        "on-primary-fixed-variant": "#005313",
+                        "secondary-container": "#fdcdbc",
+                        "surface-container-low": "#f2f4f1",
+                        "on-secondary-fixed": "#2e150b",
+                        "secondary-fixed-dim": "#ebbcac",
+                        "surface-tint": "#006e1c",
+                        "inverse-surface": "#2e312f",
+                        "outline-variant": "#becab9",
+                        "on-primary-container": "#003c0b",
+                        "secondary": "#7a5649",
+                        "on-tertiary-container": "#0d3b19",
+                        "primary-fixed-dim": "#78dc77",
+                        "surface": "#f8faf7",
+                        "surface-container-high": "#e7e9e6",
+                        "on-secondary": "#ffffff",
+                        "inverse-primary": "#78dc77",
+                        "on-tertiary": "#ffffff",
+                        "primary-fixed": "#94f990",
+                        "on-secondary-fixed-variant": "#603f33",
+                        "on-error": "#ffffff",
+                        "tertiary": "#3c6842",
+                        "surface-dim": "#d8dbd8",
+                        "tertiary-fixed-dim": "#a2d3a4",
+                        "on-surface-variant": "#3f4a3c",
+                        "on-error-container": "#93000a",
+                        "error-container": "#ffdad6",
+                        "surface-variant": "#e1e3e0",
+                        "on-surface": "#191c1b",
+                        "inverse-on-surface": "#eff1ee"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Plus Jakarta Sans"],
+                        "display": ["Plus Jakarta Sans"],
+                        "body": ["Manrope"],
+                        "label": ["Manrope"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { font-family: 'Manrope', sans-serif; }
+        h1, h2, h3, h4, h5, h6, .display, .headline { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .material-symbols-outlined.fill { font-variation-settings: 'FILL' 1; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface antialiased flex">
+<!-- Side Navigation -->
+<aside class="hidden md:flex flex-col h-screen w-72 fixed left-0 top-0 border-r border-outline-variant/30 bg-surface-bright pt-12 px-6 py-10 z-40">
+<div class="mb-12">
+<h1 class="font-headline text-xl font-bold text-on-surface tracking-tight">The Conservatory</h1>
+<p class="font-label text-sm text-on-surface-variant opacity-80">Botanical Community</p>
+</div>
+<nav class="space-y-2 flex-grow">
+<a class="flex items-center gap-4 text-on-surface-variant hover:bg-surface-container hover:text-on-surface rounded-xl px-4 py-3 transition-colors" href="#">
+<span class="material-symbols-outlined text-xl">home</span>
+<span class="font-label font-medium tracking-wide">Home</span>
+</a>
+<a class="flex items-center gap-4 text-on-surface-variant hover:bg-surface-container hover:text-on-surface rounded-xl px-4 py-3 transition-colors" href="#">
+<span class="material-symbols-outlined text-xl">potted_plant</span>
+<span class="font-label font-medium tracking-wide">Explore</span>
+</a>
+<a class="flex items-center gap-4 text-on-surface-variant hover:bg-surface-container hover:text-on-surface rounded-xl px-4 py-3 transition-colors" href="#">
+<span class="material-symbols-outlined text-xl">menu_book</span>
+<span class="font-label font-medium tracking-wide">Encyclopedia</span>
+</a>
+<a class="flex items-center gap-4 text-on-surface-variant hover:bg-surface-container hover:text-on-surface rounded-xl px-4 py-3 transition-colors" href="#">
+<span class="material-symbols-outlined text-xl">add_box</span>
+<span class="font-label font-medium tracking-wide">Post</span>
+</a>
+<a class="flex items-center gap-4 text-primary font-bold bg-surface-container-low rounded-xl px-4 py-3 transition-colors" href="#">
+<span class="material-symbols-outlined text-xl fill">account_circle</span>
+<span class="font-label tracking-wide">Profile</span>
+</a>
+</nav>
+<button class="mt-8 w-full py-4 rounded-full bg-primary text-on-primary font-label font-semibold tracking-wide hover:opacity-90 transition-opacity shadow-sm shadow-primary/20">
+            Share your Bloom
+        </button>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-1 ml-0 md:ml-72 min-h-screen relative pb-20 md:pb-0">
+<!-- Header Background Element (Asymmetric depth) -->
+<div class="absolute top-0 left-0 w-full h-64 bg-gradient-to-br from-surface-container-high to-surface-container z-0 rounded-br-[4rem] opacity-50"></div>
+<div class="relative z-10 max-w-6xl mx-auto px-6 md:px-12 pt-16 md:pt-24">
+<!-- Profile Hero Section -->
+<section class="flex flex-col md:flex-row gap-10 items-start md:items-center mb-16">
+<!-- Avatar -->
+<div class="relative flex-shrink-0">
+<div class="w-32 h-32 md:w-40 md:h-40 rounded-full overflow-hidden ring-4 ring-surface-container-lowest shadow-sm">
+<img alt="Elena Thorne 肖像" class="w-full h-full object-cover" data-alt="close-up portrait of a woman with natural makeup in a bright greenhouse setting, soft natural lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAonksW-5oMIo3m9qq966yG9fta2sOsuX__voPlwpGYX3Fqj_znVVPWYqbSjiTiPz0HhV5SutPTEU9I4Jsg9ytyl83qhAp2aH1ZDFN1OPIe7S111tFWpVXw5gdppg9JK8HarQtt41JLz9m8CqtLJ6e_YcgdvJnQTubJ2jbqxHzEq7ykosu7AlxSk1817IRDWmUKcT2JmA1q44_pazhUHn9MmovjeUzLIK-s88tCjL_DXUEN1ERnLMMUjRpDnOQQ11iE6qpxLLnCSS8"/>
+</div>
+</div>
+<!-- Info -->
+<div class="flex-1">
+<div class="flex flex-col md:flex-row md:items-center gap-4 md:gap-6 mb-4">
+<h2 class="font-headline text-4xl md:text-5xl font-extrabold text-on-surface tracking-tight">Elena Thorne</h2>
+<div class="flex gap-3">
+<button class="px-5 py-2 rounded-full bg-primary text-on-primary font-label font-medium text-sm hover:opacity-90 transition-opacity">编辑主页</button>
+<button class="w-10 h-10 rounded-full flex items-center justify-center border border-outline-variant/50 text-on-surface hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-lg">settings</span>
+</button>
+</div>
+</div>
+<p class="font-body text-on-surface-variant max-w-2xl text-lg leading-relaxed mb-6">
+                        植物爱好者，专注于室内阔叶植物与沙漠多肉的养护。分享生长日记，探索城市钢铁森林中的一抹绿意。
+                    </p>
+<!-- Stats -->
+<div class="flex gap-8 md:gap-12">
+<div class="flex flex-col">
+<span class="font-headline text-2xl font-bold text-on-surface">142</span>
+<span class="font-label text-sm text-on-surface-variant uppercase tracking-widest mt-1">植物标本</span>
+</div>
+<div class="flex flex-col">
+<span class="font-headline text-2xl font-bold text-on-surface">12.5k</span>
+<span class="font-label text-sm text-on-surface-variant uppercase tracking-widest mt-1">关注者</span>
+</div>
+<div class="flex flex-col">
+<span class="font-headline text-2xl font-bold text-on-surface">18</span>
+<span class="font-label text-sm text-on-surface-variant uppercase tracking-widest mt-1">养护指南</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Tabs & Filters -->
+<section class="sticky top-0 z-30 bg-surface/80 backdrop-blur-xl pt-4 pb-4 border-b border-outline-variant/20 mb-8 flex items-center justify-between">
+<div class="flex gap-8">
+<button class="font-headline font-bold text-on-surface border-b-2 border-primary pb-2 tracking-tight">我的动态</button>
+<button class="font-headline font-medium text-on-surface-variant pb-2 hover:text-on-surface transition-colors tracking-tight">洞察分析</button>
+</div>
+<div class="flex gap-2">
+<button class="w-10 h-10 rounded-full flex items-center justify-center text-primary bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined">grid_view</span>
+</button>
+<button class="w-10 h-10 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined">view_agenda</span>
+</button>
+</div>
+</section>
+<!-- Grid Layout (Bento style) -->
+<section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-24">
+<!-- Card 1 -->
+<article class="group relative rounded-xl overflow-hidden bg-surface-container-lowest aspect-square md:col-span-2 md:row-span-2">
+<img alt="Monstera Deliciosa" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="large vibrant green monstera plant leaf with deep fenestrations, close up macro photography, bright soft lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBbKRXxusa4gNJIkGnrRhNybFdI7Wi08_rOAt2OS0jQjpYpARonxNVgQZvQUaTJbDmhuEghlp5BchmZRrArCcdGMNRLKCWVqHZz_BmuvcfDlv8MGr-VHVtJ3Qy0QSHGOI63W_oCkNwjxUbpcEpAf3R3FJEAxAwdzBH_1evESfC-D9RmdVSOXc-oHJ0zq7diXseK9AHujmWeB-gInd4_L1WA7mptcKh-8mHzWyne-kb8DtnyziwMpcRfyYbah1j-gWDWgWrCpgowvd8"/>
+<div class="absolute inset-0 bg-gradient-to-t from-on-surface/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+<h3 class="font-headline text-on-primary text-2xl font-bold mb-1">龟背竹生长日记</h3>
+<p class="font-body text-surface-bright/90 text-sm">第 45 天 - 新叶展开</p>
+</div>
+</article>
+<!-- Card 2 -->
+<article class="group relative rounded-xl overflow-hidden bg-surface-container-lowest aspect-square">
+<img alt="Terrarium" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="small glass geometric terrarium containing succulents and moss on a wooden table, soft window light" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDeBgl5P66h5QJvAdvxkbsPg8kN1Pm5e-cORrO_LZPmOBJ21u6taj9dpej28c8eYN5PdjeqRPCnYkq9kae9xWZNP6muH_sa0ayB0jMa5ODJXG3EQz2iYDmcrx5yIdpharCHntmS1pvkB3D0lqLOU98tNaAfgUEVCC8EZ5y3KHCORROtgtwCZyQDwe5oYelx9LmnwvO-0Lr4De-fw6m02gD-5D6i0HLK0mquvriHYYuvoSrtRXv2VXtgGu0e20KVUUBCMTVqUyrJf9A"/>
+<div class="absolute inset-0 bg-gradient-to-t from-on-surface/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+<h3 class="font-headline text-on-primary text-xl font-bold mb-1">微型玻璃容器</h3>
+<p class="font-body text-surface-bright/90 text-sm">生态瓶构建指南</p>
+</div>
+</article>
+<!-- Card 3 -->
+<article class="group relative rounded-xl overflow-hidden bg-surface-container-lowest aspect-square">
+<img alt="Calathea" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="close up of calathea orbifolia leaves showing distinct silver and green striped patterns, moody lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCPkxPtTzoIFGNk6BsiBgJAwgXWIT56oTiBrQ5gXfZlTPuIWwdJpVXhVXhySuvDdrbkS3JPmTCxtUc080wEaX8u_Pzf02lcydrMHz7MkNk3YUvNdRjcBErIGrbAOYpOTreEiDWaIOYu6aR7I4Bd2LD8AQktz4qiEcAiIxr5sYBYaZtTlcdVSiSkxOl1LP1Kz9Iw4Wrv6hsNlZnPso4hGEybXaiOBXNp3yaJbMG0jzZ-QtqQWz9rhBeowXK38QZNAagu4SyG-ogMUA8"/>
+<div class="absolute inset-0 bg-gradient-to-t from-on-surface/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+<h3 class="font-headline text-on-primary text-xl font-bold mb-1">孔雀竹芋养护</h3>
+<p class="font-body text-surface-bright/90 text-sm">湿度控制技巧</p>
+</div>
+</article>
+</section>
+</div>
+</main>
+</body></html>

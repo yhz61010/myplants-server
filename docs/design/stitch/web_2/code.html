@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+
+<html class="light" lang="zh-CN"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Digital Conservatory - 探索</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary": "#ffffff",
+                        "surface-bright": "#f8faf7",
+                        "tertiary-container": "#77a67a",
+                        "outline": "#6f7a6b",
+                        "on-secondary-container": "#795548",
+                        "surface-container-highest": "#e1e3e0",
+                        "primary": "#006e1c",
+                        "surface-container-lowest": "#ffffff",
+                        "on-primary-fixed": "#002204",
+                        "background": "#f8faf7",
+                        "primary-container": "#4caf50",
+                        "on-tertiary-fixed": "#002109",
+                        "surface-container": "#eceeeb",
+                        "tertiary-fixed": "#bdefbe",
+                        "on-background": "#191c1b",
+                        "secondary-fixed": "#ffdbcf",
+                        "error": "#ba1a1a",
+                        "on-tertiary-fixed-variant": "#24502c",
+                        "on-primary-fixed-variant": "#005313",
+                        "secondary-container": "#fdcdbc",
+                        "surface-container-low": "#f2f4f1",
+                        "on-secondary-fixed": "#2e150b",
+                        "secondary-fixed-dim": "#ebbcac",
+                        "surface-tint": "#006e1c",
+                        "inverse-surface": "#2e312f",
+                        "outline-variant": "#becab9",
+                        "on-primary-container": "#003c0b",
+                        "secondary": "#7a5649",
+                        "on-tertiary-container": "#0d3b19",
+                        "primary-fixed-dim": "#78dc77",
+                        "surface": "#f8faf7",
+                        "surface-container-high": "#e7e9e6",
+                        "on-secondary": "#ffffff",
+                        "inverse-primary": "#78dc77",
+                        "on-tertiary": "#ffffff",
+                        "primary-fixed": "#94f990",
+                        "on-secondary-fixed-variant": "#603f33",
+                        "on-error": "#ffffff",
+                        "tertiary": "#3c6842",
+                        "surface-dim": "#d8dbd8",
+                        "tertiary-fixed-dim": "#a2d3a4",
+                        "on-surface-variant": "#3f4a3c",
+                        "on-error-container": "#93000a",
+                        "error-container": "#ffdad6",
+                        "surface-variant": "#e1e3e0",
+                        "on-surface": "#191c1b",
+                        "inverse-on-surface": "#eff1ee"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Plus Jakarta Sans"],
+                        "display": ["Plus Jakarta Sans"],
+                        "body": ["Manrope"],
+                        "label": ["Manrope"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .masonry-grid {
+            column-count: 1;
+            column-gap: 1.5rem;
+        }
+        @media (min-width: 768px) {
+            .masonry-grid { column-count: 2; }
+        }
+        @media (min-width: 1024px) {
+            .masonry-grid { column-count: 3; }
+        }
+        .masonry-item {
+            break-inside: avoid;
+            margin-bottom: 1.5rem;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body min-h-screen flex antialiased">
+<!-- SideNavBar (Desktop Only) -->
+<nav class="hidden md:flex flex-col h-screen w-72 fixed left-0 top-0 border-r border-surface-container-highest bg-surface pt-20 px-6 pb-10 space-y-6 z-40">
+<div class="mb-8">
+<h1 class="text-xl font-bold text-primary font-headline tracking-tight">The Conservatory</h1>
+<p class="text-sm text-on-surface-variant font-medium">Botanical Community</p>
+</div>
+<div class="flex-1 space-y-2">
+<a class="text-on-surface-variant flex items-center gap-3 hover:bg-surface-container-low rounded-xl px-4 py-3 transition-all hover:translate-x-1 duration-300" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-['Manrope'] text-sm font-medium tracking-wide">Home</span>
+</a>
+<a class="text-primary font-bold flex items-center gap-3 bg-surface-container-low rounded-xl px-4 py-3 transition-all" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">potted_plant</span>
+<span class="font-['Manrope'] text-sm tracking-wide">Explore</span>
+</a>
+<a class="text-on-surface-variant flex items-center gap-3 hover:bg-surface-container-low rounded-xl px-4 py-3 transition-all hover:translate-x-1 duration-300" href="#">
+<span class="material-symbols-outlined">menu_book</span>
+<span class="font-['Manrope'] text-sm font-medium tracking-wide">Encyclopedia</span>
+</a>
+<a class="text-on-surface-variant flex items-center gap-3 hover:bg-surface-container-low rounded-xl px-4 py-3 transition-all hover:translate-x-1 duration-300" href="#">
+<span class="material-symbols-outlined">add_box</span>
+<span class="font-['Manrope'] text-sm font-medium tracking-wide">Post</span>
+</a>
+<a class="text-on-surface-variant flex items-center gap-3 hover:bg-surface-container-low rounded-xl px-4 py-3 transition-all hover:translate-x-1 duration-300" href="#">
+<span class="material-symbols-outlined">account_circle</span>
+<span class="font-['Manrope'] text-sm font-medium tracking-wide">Profile</span>
+</a>
+</div>
+<button class="w-full bg-primary text-on-primary rounded-full py-3 px-4 font-bold text-sm hover:opacity-90 transition-opacity">
+            Share your Bloom
+        </button>
+</nav>
+<!-- Main Content Area -->
+<main class="flex-1 md:ml-72 flex flex-col min-h-screen">
+<!-- TopAppBar -->
+<header class="sticky top-0 w-full z-30 bg-surface/80 backdrop-blur-xl h-20 px-8 flex justify-between items-center">
+<!-- Mobile Brand (Hidden on Desktop) -->
+<div class="md:hidden">
+<h1 class="text-2xl font-black text-primary font-headline tracking-tighter">Digital Conservatory</h1>
+</div>
+<!-- Search Bar -->
+<div class="hidden md:flex flex-1 max-w-xl mx-auto relative group">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+<input class="w-full bg-surface-container-high border-none rounded-full py-3 pl-12 pr-4 text-sm focus:ring-2 focus:ring-primary focus:bg-surface outline-none transition-all placeholder:text-on-surface-variant" placeholder="搜索植物、分类或作者..." type="text"/>
+</div>
+<!-- Trailing Actions -->
+<div class="flex items-center gap-4 ml-auto">
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors hover:bg-surface-container-low rounded-full">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors hover:bg-surface-container-low rounded-full">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<div class="w-10 h-10 rounded-full bg-surface-container-highest overflow-hidden ml-2 cursor-pointer border border-surface-container-highest">
+<img alt="User avatar" class="w-full h-full object-cover" data-alt="Close up portrait of a young woman with natural makeup in soft studio lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuArqo9C3c-Np7wy8LslSzu9f33dLZ1dY0vlu9GCEU1o5SgbT9CR6AR49iqR2HmFttU0ZV_K34mgThIks8HRQbVVBh4-KZ3cKgXJJAgjUYQtMF08dSuUonlplvziygtohQ8VZ0A30sxKTxLk9S3xFKpDP_25-oUonpZQs_5iXu8QRJn0NfCIF0Ht-YxM4BMSpF4W3syLLPLtj4AyruA9d1Yk_7nISFnQ4cK-nWvMHY4fvsTd2HGuFA1WZqX6YNBVO5Gbauw0przBSZo"/>
+</div>
+</div>
+</header>
+<!-- Content Canvas -->
+<div class="p-8 pb-24 md:pb-8 flex-1">
+<!-- Hero / Discovery Header -->
+<div class="mb-12 relative rounded-xl overflow-hidden bg-gradient-to-br from-primary to-primary-container p-10 flex flex-col justify-end min-h-[320px]">
+<div class="absolute inset-0 mix-blend-overlay opacity-30">
+<img alt="Botanical background" class="w-full h-full object-cover" data-alt="Macro photography of lush green monstera leaves with soft natural light filtering through" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAoVGU3VEIxT5LecQYNAeMNlRjXpN9lOvgpGS2bgCL9r48N31yCQbp2gSuc0ZF8w-RYTf5Zr49r0vDOPafo-Q3gOsJOYfvLS-LqhXB4djk9LZju_CcKS7Pf6xyKmruVett2TuuwGPg_jpqRDRKfnuGFXbBmP6pXtcImeI65lndII9HyOB7NS5LVtr2VV9wF2adA9mAJGmS_RbcENczL1mOIRozdgWyb_4hslJ5HcRq3UZP_bmLnY-0ZKKtMX89O4TMp2g4CDuEewvQ"/>
+</div>
+<div class="relative z-10 max-w-2xl">
+<h2 class="text-display font-headline text-4xl md:text-5xl font-bold text-on-primary tracking-tight mb-4 leading-tight">
+                        发现属于你的<br/>自然灵感
+                    </h2>
+<p class="text-on-primary/90 font-body text-lg max-w-md">
+                        探索来自世界各地的植物图鉴、养护心得与绿植空间设计。
+                    </p>
+</div>
+</div>
+<!-- Categories / Chips -->
+<div class="mb-10 flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
+<button class="whitespace-nowrap px-6 py-2 rounded-full bg-secondary-fixed-dim text-on-secondary-fixed font-bold text-sm font-label tracking-wider uppercase">
+                    全部 ALL
+                </button>
+<button class="whitespace-nowrap px-6 py-2 rounded-full bg-surface-container-high text-on-surface hover:bg-surface-container-highest transition-colors font-medium text-sm font-label tracking-wider uppercase">
+                    多肉 SUCCULENTS
+                </button>
+<button class="whitespace-nowrap px-6 py-2 rounded-full bg-surface-container-high text-on-surface hover:bg-surface-container-highest transition-colors font-medium text-sm font-label tracking-wider uppercase">
+                    蕨类 FERNS
+                </button>
+<button class="whitespace-nowrap px-6 py-2 rounded-full bg-surface-container-high text-on-surface hover:bg-surface-container-highest transition-colors font-medium text-sm font-label tracking-wider uppercase">
+                    天南星 ARACEAE
+                </button>
+<button class="whitespace-nowrap px-6 py-2 rounded-full bg-surface-container-high text-on-surface hover:bg-surface-container-highest transition-colors font-medium text-sm font-label tracking-wider uppercase">
+                    室内盆栽 INDOOR
+                </button>
+</div>
+<!-- Masonry Grid -->
+<div class="masonry-grid">
+<!-- Specimen Card 1 -->
+<div class="masonry-item bg-surface-container-lowest rounded-xl overflow-hidden group cursor-pointer">
+<div class="relative w-full pb-[120%] rounded-xl overflow-hidden">
+<img alt="Succulent" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out" data-alt="Close up top view of a geometric echeveria succulent plant with dusty pink and green leaves" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCnD8VkRjLFzrHA50UXEzyvCn2J91GL6oUJJF1P8eSMb7tBpVLiAnOjj1-VqGX-6lLGxRR1Yk_f_oDUo0H37PNdhVdkMp5au06zLuaIUUglBEns5dhAEyU5mqhoVk2CLr2pvA2T5pblPUrGg4OeOaitBV2doR27AI0jFx0h30b-MuXqvbytrIWDjcyEIBWUy9LAxpVa4ur11yyQ1swXxZE0VgUbjHImhPG3tS6rK0bdS20yCU3vPT7t6v5EdxAGgh6Uc7JGzzIOkWQ"/>
+<div class="absolute inset-0 bg-gradient-to-t from-on-surface/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+<div class="absolute bottom-4 left-4 right-4 flex justify-between items-end opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+<span class="text-on-primary font-body text-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">favorite</span> 2.4k
+                            </span>
+<span class="material-symbols-outlined text-on-primary">bookmark</span>
+</div>
+</div>
+<div class="pt-4 pb-2 px-2">
+<h3 class="font-headline font-semibold text-lg text-on-surface -mt-2 relative z-10 bg-surface-container-lowest inline-block pr-2">雪莲 Echeveria laui</h3>
+<div class="flex items-center gap-2 mt-2">
+<img alt="Author" class="w-6 h-6 rounded-full" data-alt="Portrait of young woman smiling outdoors" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA_yT4azZgPSfuXety80qgqsZxJ1WL9KhdCWoVpRjMlh_bCHCmuNh6Waja3VTOBJaaFAW3fdv6fu-_Ziticyk9ZLMnoESqlblEFcaI7NdU_8-mU8ymkmVlWDpikemriHwv_qzlQOvE6ov9LNpAprPk8Kj4lwiewW8ZDVV2VXl2WJ3phd-B0-9WDIibIeY2V6CUb9xd4YH3jMdxnlBZNJ20erM4OOavhA4JFk5ql9_IQedztevF9_ZFIM16ShJfH1RvS1YSQAgwp_xc"/>
+<span class="text-sm text-on-surface-variant font-body">PlantLover_99</span>
+</div>
+</div>
+</div>
+<!-- Specimen Card 2 -->
+<div class="masonry-item bg-surface-container-lowest rounded-xl overflow-hidden group cursor-pointer">
+<div class="relative w-full pb-[80%] rounded-xl overflow-hidden">
+<img alt="Fern" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out" data-alt="Lush green maidenhair fern leaves cascading softly in gentle diffused indoor lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBmGWXKNm8Y4GdA-AfxCfcx-bSX68V4IZeKmnJDxEnxGnUPzwFmdp2CZHPLZ2XSpdo_wjBkOx9XsjAZuFkFHeeDWuZQr8VtoRI_eeMPrheDNG6YxNzAUK8OJqBUDgXkjSy11e2JuWwv9xAWPFNBjnOnaXsK71LWh0W1VYutJF16pZz1KErm6ZvJJF6K1BPjN0WhZT8a1ki35w-T8PSr-LnlU8-J3PeoiMdiB1YDa9b1SsKVosezi_pq_dI1Wi3HCyerWiMyUod6MM0"/>
+<div class="absolute inset-0 bg-gradient-to-t from-on-surface/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+</div>
+<div class="pt-4 pb-2 px-2">
+<h3 class="font-headline font-semibold text-lg text-on-surface -mt-2 relative z-10 bg-surface-container-lowest inline-block pr-2">铁线蕨 Maidenhair</h3>
+<p class="text-sm text-on-surface-variant mt-1 line-clamp-2 font-body">保持高湿度是养好铁线蕨的关键，分享我的喷雾小技巧...</p>
+</div>
+</div>
+<!-- Specimen Card 3 (Editorial Highlight) -->
+<div class="masonry-item bg-surface-container-low rounded-xl overflow-hidden p-8 flex flex-col justify-center min-h-[300px] border border-outline-variant/15">
+<div class="text-primary mb-4">
+<span class="material-symbols-outlined text-4xl" style="font-variation-settings: 'FILL' 1;">format_quote</span>
+</div>
+<h3 class="font-headline text-2xl font-bold text-on-surface leading-tight mb-4">
+                        "园艺不仅是关于种植，更是关于耐心与观察的艺术。"
+                    </h3>
+<p class="font-body text-sm text-on-surface-variant uppercase tracking-widest">— 本周精选</p>
+</div>
+<!-- Specimen Card 4 -->
+<div class="masonry-item bg-surface-container-lowest rounded-xl overflow-hidden group cursor-pointer">
+<div class="relative w-full pb-[150%] rounded-xl overflow-hidden">
+<img alt="Monstera" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out" data-alt="Large beautiful monstera deliciosa plant in a minimalist white ceramic pot next to a window" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCRQtcQHtIk097N9pn8Ql7gEFNmu9F6Wk2fr9yH76P6jXgZ6vSfGL-J4V5UIzuo-rqN_dx7SlY7H0jEVBoDo81OwW5BiW0b-ANQgL1ksdY71Lb8kk6ZQE3o_DFoERZ6g6BSoaYLWoRXrHROBbDbmO4INjqfd7i1GqdXOYu-t_a-tJQW5UHNyHp288kQWdu8v6Z7MqfXNS0nggvWnDG908g1Lqihzuu1pF7vkwtDucupEyE60qWT4px0ev7KSVGQSag3YGYDaYJ1kF0"/>
+</div>
+<div class="pt-4 pb-2 px-2">
+<h3 class="font-headline font-semibold text-lg text-on-surface -mt-2 relative z-10 bg-surface-container-lowest inline-block pr-2">龟背竹的呼吸感</h3>
+<div class="flex items-center gap-2 mt-2">
+<img alt="Author" class="w-6 h-6 rounded-full" data-alt="Portrait of a man with glasses looking directly at camera" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAVpo5mdMvBxIwDGdpJXmiLxtRxO3LDfLzSyvS6TDeCgPxm5I2xyBNxWnXuhSneFZG6kVM4Zk_XgGugoL0ub7mJkwK4ET-eujeEBzS2hOWTYA9DmEP2PosvpJFGWJw97_nHPMdAOcP96HpqLpvsYr-0vPYhIAIPkVwLyQPUn83zO12Ux1z4JvapsztCzuaDjzs23iOPlhfK5jkXFtT2QuHirCdtchSjO2JRVk0gX83_QTi0MHv2CgHcOyupDdrtoDI5kc-sNHpb0MQ"/>
+<span class="text-sm text-on-surface-variant font-body">GreenSpace Design</span>
+</div>
+</div>
+</div>
+<!-- Specimen Card 5 -->
+<div class="masonry-item bg-surface-container-lowest rounded-xl overflow-hidden group cursor-pointer">
+<div class="relative w-full pb-[100%] rounded-xl overflow-hidden">
+<img alt="Terrarium" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out" data-alt="Detailed close up of a miniature moss terrarium in a glass jar with tiny ferns" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAye5eu92HB3iX7GRQQQlDOIJk3-2C6lIeVcCLuQharMmCF4vd_cKClDN3mzBSdDYNgLmvbQxDXVRWPzPvag_aAmMNM892NN1VsyzKCh0bgVFPoLzrUPlr-8qWDQEl5kLY5dNwIUtkC9bfpCDvpHM4MTLqNj3cwgWj7K_vvmjFlFCBWkLyTlCNZShCvBIt5Pj6mKBYsFdeW2PbHBEys3F9i5IqwbJm5IY0GH2UcCG1ZexxIR0oCxtEAlk3VF94XBTo3ffY_wxTFJWA"/>
+</div>
+<div class="pt-4 pb-2 px-2">
+<h3 class="font-headline font-semibold text-lg text-on-surface -mt-2 relative z-10 bg-surface-container-lowest inline-block pr-2">微观世界 Terrarium</h3>
+<p class="text-sm text-on-surface-variant mt-1 line-clamp-2 font-body">新手友好的生态缸制作教程，打造桌面小森林。</p>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Mobile Bottom Navigation (Hidden on Desktop) -->
+<nav class="md:hidden fixed bottom-0 w-full bg-surface/90 backdrop-blur-xl border-t border-surface-container-highest z-50 px-6 py-3 flex justify-between items-center">
+<a class="flex flex-col items-center gap-1 text-on-surface-variant" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="text-[10px] font-medium font-body">首页</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-primary" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">potted_plant</span>
+<span class="text-[10px] font-bold font-body">探索</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-on-surface-variant" href="#">
+<span class="material-symbols-outlined">add_circle</span>
+<span class="text-[10px] font-medium font-body">发布</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-on-surface-variant" href="#">
+<span class="material-symbols-outlined">account_circle</span>
+<span class="text-[10px] font-medium font-body">我的</span>
+</a>
+</nav>
+</body></html>

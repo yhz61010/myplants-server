@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>植友圈 - The Digital Conservatory</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&amp;family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary": "#ffffff",
+                        "surface-bright": "#f8faf7",
+                        "tertiary-container": "#77a67a",
+                        "outline": "#6f7a6b",
+                        "on-secondary-container": "#795548",
+                        "surface-container-highest": "#e1e3e0",
+                        "primary": "#006e1c",
+                        "surface-container-lowest": "#ffffff",
+                        "on-primary-fixed": "#002204",
+                        "background": "#f8faf7",
+                        "primary-container": "#4caf50",
+                        "on-tertiary-fixed": "#002109",
+                        "surface-container": "#eceeeb",
+                        "tertiary-fixed": "#bdefbe",
+                        "on-background": "#191c1b",
+                        "secondary-fixed": "#ffdbcf",
+                        "error": "#ba1a1a",
+                        "on-tertiary-fixed-variant": "#24502c",
+                        "on-primary-fixed-variant": "#005313",
+                        "secondary-container": "#fdcdbc",
+                        "surface-container-low": "#f2f4f1",
+                        "on-secondary-fixed": "#2e150b",
+                        "secondary-fixed-dim": "#ebbcac",
+                        "surface-tint": "#006e1c",
+                        "inverse-surface": "#2e312f",
+                        "outline-variant": "#becab9",
+                        "on-primary-container": "#003c0b",
+                        "secondary": "#7a5649",
+                        "on-tertiary-container": "#0d3b19",
+                        "primary-fixed-dim": "#78dc77",
+                        "surface": "#f8faf7",
+                        "surface-container-high": "#e7e9e6",
+                        "on-secondary": "#ffffff",
+                        "inverse-primary": "#78dc77",
+                        "on-tertiary": "#ffffff",
+                        "primary-fixed": "#94f990",
+                        "on-secondary-fixed-variant": "#603f33",
+                        "on-error": "#ffffff",
+                        "tertiary": "#3c6842",
+                        "surface-dim": "#d8dbd8",
+                        "tertiary-fixed-dim": "#a2d3a4",
+                        "on-surface-variant": "#3f4a3c",
+                        "on-error-container": "#93000a",
+                        "error-container": "#ffdad6",
+                        "surface-variant": "#e1e3e0",
+                        "on-surface": "#191c1b",
+                        "inverse-on-surface": "#eff1ee"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Plus Jakarta Sans", "sans-serif"],
+                        "display": ["Plus Jakarta Sans", "sans-serif"],
+                        "body": ["Manrope", "sans-serif"],
+                        "label": ["Manrope", "sans-serif"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { font-family: 'Manrope', sans-serif; }
+        h1, h2, h3, h4, h5, h6, .font-headline, .font-display { font-family: 'Plus Jakarta Sans', sans-serif; }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen antialiased flex">
+<!-- SideNavBar (Web) -->
+<aside class="hidden md:flex flex-col h-screen w-72 fixed left-0 top-0 border-r border-outline-variant/15 bg-surface-container-lowest z-40">
+<div class="space-y-6 px-6 py-10 flex flex-col h-full pt-20">
+<div class="text-xl font-bold text-primary mb-8 font-headline">
+                The Conservatory<br/>
+<span class="text-sm font-medium text-on-surface-variant font-body">Botanical Community</span>
+</div>
+<nav class="flex-1 space-y-2">
+<a class="text-primary font-bold flex items-center gap-3 hover:bg-surface-container-low rounded-xl px-4 py-3 transition-all hover:translate-x-1 duration-300" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="font-body text-sm font-medium tracking-wide">Home</span>
+</a>
+<a class="text-on-surface-variant flex items-center gap-3 hover:bg-surface-container-low rounded-xl px-4 py-3 transition-all hover:translate-x-1 duration-300" href="#">
+<span class="material-symbols-outlined">potted_plant</span>
+<span class="font-body text-sm font-medium tracking-wide">Explore</span>
+</a>
+<a class="text-on-surface-variant flex items-center gap-3 hover:bg-surface-container-low rounded-xl px-4 py-3 transition-all hover:translate-x-1 duration-300" href="#">
+<span class="material-symbols-outlined">menu_book</span>
+<span class="font-body text-sm font-medium tracking-wide">Encyclopedia</span>
+</a>
+<a class="text-on-surface-variant flex items-center gap-3 hover:bg-surface-container-low rounded-xl px-4 py-3 transition-all hover:translate-x-1 duration-300" href="#">
+<span class="material-symbols-outlined">add_box</span>
+<span class="font-body text-sm font-medium tracking-wide">Post</span>
+</a>
+<a class="text-on-surface-variant flex items-center gap-3 hover:bg-surface-container-low rounded-xl px-4 py-3 transition-all hover:translate-x-1 duration-300" href="#">
+<span class="material-symbols-outlined">account_circle</span>
+<span class="font-body text-sm font-medium tracking-wide">Profile</span>
+</a>
+</nav>
+<div class="mt-auto">
+<button class="w-full bg-primary text-on-primary rounded-full py-3 px-4 font-label font-bold text-sm flex items-center justify-center gap-2 hover:bg-primary-container transition-colors shadow-[0_8px_32px_-4px_rgba(0,110,28,0.15)]">
+<span class="material-symbols-outlined text-lg">edit</span>
+                    Share your Bloom
+                </button>
+</div>
+</div>
+</aside>
+<!-- TopAppBar (Mobile) -->
+<header class="md:hidden fixed top-0 w-full z-50 bg-surface/70 backdrop-blur-xl border-b border-outline-variant/15 flex justify-between items-center px-4 py-3 shadow-[0_4px_32px_-4px_rgba(25,28,27,0.06)]">
+<div class="text-lg font-black text-primary font-headline tracking-tighter">
+            Digital Conservatory
+        </div>
+<div class="flex items-center gap-4 text-primary">
+<button class="hover:text-primary-container transition-colors"><span class="material-symbols-outlined">notifications</span></button>
+<button class="hover:text-primary-container transition-colors"><span class="material-symbols-outlined">settings</span></button>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="flex-1 md:ml-72 mt-16 md:mt-0 p-4 md:p-8 lg:p-12 flex flex-col lg:flex-row gap-8 max-w-7xl mx-auto w-full">
+<!-- Center Feed -->
+<div class="flex-1 space-y-8 min-w-0">
+<header class="mb-10">
+<h1 class="text-4xl md:text-5xl font-headline font-bold text-on-background tracking-tight mb-2">植友圈 <span class="text-primary">发现</span></h1>
+<p class="text-on-surface-variant font-body text-lg">最新的植物养护心得与社区动态</p>
+</header>
+<!-- Featured Post (Glassmorphism / Asymmetric) -->
+<article class="relative bg-surface-container-lowest rounded-xl overflow-hidden group">
+<div class="absolute inset-0 bg-gradient-to-br from-primary/5 to-surface-container-lowest z-0 pointer-events-none"></div>
+<div class="flex flex-col md:flex-row relative z-10">
+<div class="md:w-1/2 p-6 md:p-8 flex flex-col justify-center">
+<div class="flex items-center gap-2 mb-4">
+<span class="bg-secondary-fixed-dim text-on-secondary-fixed text-xs font-label uppercase tracking-widest px-3 py-1 rounded-full">养护指南</span>
+<span class="text-on-surface-variant text-sm font-body">2小时前</span>
+</div>
+<h2 class="text-3xl font-headline font-bold text-on-background mb-4 leading-tight group-hover:text-primary transition-colors">龟背竹 (Monstera Deliciosa) 的春季复苏指南</h2>
+<p class="text-on-surface-variant font-body mb-6 line-clamp-3">随着春季的到来，气温回升，光照充足，正是龟背竹快速生长的黄金时期。本文将分享如何调整浇水频率、施肥技巧以及如何引导气生根，帮助你的龟背竹长出更多迷人的裂叶...</p>
+<div class="flex items-center justify-between mt-auto">
+<div class="flex items-center gap-3">
+<img alt="Avatar" class="w-10 h-10 rounded-full object-cover border-2 border-surface-container-lowest" data-alt="portrait of a young asian woman smiling softly in a brightly lit indoor plant shop, shallow depth of field" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBzQ-OHnASPC6EYdHaFuZ1fSBxvBWJg0mWKfXKmcRyH806BOAR1uylzQEBkU4IcSDSbXGZ6A9EQMJ8lA6zrTXwhD1nkyx55Axhl91mdPIIQfMzNZexNpTzMp_-L-z2s8LV71yk3ksWkDzYUcxXu_N6OqsRaqzU_6WCZp8UNT_1n_cp8emgEtq1C5GRFhtdF7C6WMph4CNGC7LCzNJjDQRHzDpTo8NiOX-oq9ihFcwUg3RfT5dXV7YzVtn0WY67h-x3lPfH8cr6dntI"/>
+<div>
+<p class="text-sm font-bold text-on-background font-body">林小绿</p>
+<p class="text-xs text-on-surface-variant font-body">植物学家</p>
+</div>
+</div>
+<button class="text-on-surface-variant hover:text-primary hover:bg-surface-container-high p-2 rounded-full transition-all">
+<span class="material-symbols-outlined">bookmark</span>
+</button>
+</div>
+</div>
+<div class="md:w-1/2 relative min-h-[300px]">
+<img alt="Monstera plant" class="absolute inset-0 w-full h-full object-cover rounded-l-3xl md:rounded-l-none md:rounded-bl-3xl" data-alt="close up of a large vibrant green monstera deliciosa leaf with distinctive fenestrations, soft natural sunlight filtering through, clean minimalist white background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDGveYXlBl3OvoyZOsFz09wj7Qjbs5_y-_Qycb2Mkn-gODurnlLuC_PPJIcPYJOSSYERbH4Vv7QvSWMmIY-2FVi4GLLv4kDCP2EgIZ-2qX0h0ghdh4j5c9ta3sr2YXOL1J9CTstnO2SYdZhuJlD2RbaLRnQeWv70CeCafrtNnMPjTbUP_stv1rG9ZxQAosP3CBk9sAa2pFE3vT1k9EX8yZJwanyib8CTJ6DG7GF0vCHSd8Jy3WCWeoHKZMjnTZsFtSwrln1yJOdHac"/>
+</div>
+</div>
+</article>
+<!-- Standard Feed Cards (Grid) -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<!-- Card 1 -->
+<article class="bg-surface-container-lowest rounded-xl flex flex-col overflow-hidden">
+<div class="relative aspect-square overflow-hidden">
+<img alt="Succulents" class="w-full h-full object-cover transition-transform duration-700 hover:scale-105" data-alt="overhead view of a collection of small colorful succulent plants in terracotta pots arranged neatly on a rustic wooden table, soft morning light" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCvBIbIX6wzoTnk7eBHYzjttjg8l8PtTSJ-JfmxMvlXQPEZ-xN6sgXQXP8iFW9E25Ny2tyd8mNrdl0wDQ4N08FARa1DzRgYZigCmlTw1lj5I1Slq5bPR8hA4EGv7hOAwFqbkjnElfkXH5Ug31xwT-kDBMXIuqpCm3HXCqQVzd1Lbwc7K_BFwIVVFowVc9aQGTHXrvJRfwMERa95OvTjH4ra5XNSXwIM-E6U5sriDwT6BGMB1LmzzIACVpr5Y-TZnMxFG_Wur-amRsM"/>
+<div class="absolute top-4 right-4 bg-surface/80 backdrop-blur-md px-3 py-1 rounded-full flex items-center gap-1 shadow-[0_4px_16px_-4px_rgba(25,28,27,0.1)]">
+<span class="material-symbols-outlined text-sm text-primary">favorite</span>
+<span class="text-xs font-bold text-on-surface font-body">128</span>
+</div>
+</div>
+<div class="p-5 flex-1 flex flex-col">
+<div class="flex items-center gap-2 mb-3">
+<span class="bg-surface-container-low text-on-surface-variant text-xs font-label uppercase tracking-wider px-2 py-1 rounded-md">多肉植物</span>
+<span class="text-on-surface-variant text-xs font-body">5小时前</span>
+</div>
+<h3 class="text-xl font-headline font-bold text-on-background mb-2">周末的多肉拼盘时光</h3>
+<p class="text-on-surface-variant font-body text-sm line-clamp-2 mb-4">今天花了一个下午的时间，把新买的几种景天科多肉组合在了一起。看着它们可爱的样子，心情非常治愈...</p>
+<div class="mt-auto flex items-center gap-2 pt-4 border-t border-surface-container-low">
+<div class="w-8 h-8 rounded-full bg-surface-variant flex items-center justify-center text-on-surface-variant font-bold text-xs">李</div>
+<span class="text-sm font-medium text-on-background font-body">李木子</span>
+</div>
+</div>
+</article>
+<!-- Card 2 -->
+<article class="bg-surface-container-lowest rounded-xl flex flex-col overflow-hidden">
+<div class="relative aspect-square overflow-hidden">
+<img alt="Fern" class="w-full h-full object-cover transition-transform duration-700 hover:scale-105" data-alt="close up macro shot of a delicate unfurling green fern frond fiddlehead in a dark moody forest setting, shallow depth of field highlighting the spiral texture" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC1MoNZciqBOZ3OLuRYS05h1Aa2x-F6o5zMhWxYtZZnjX_tHQXvsEkzvDXz-DXZSkMzQisv3GWg-ArCtIKuetfZB8Wkj5UACvN7HtEWy95LAjZK9VMlnn95ZZ4j9DAE1xHqu0Iw9e1C17Vcdf920zDcyPSmzzQ1ZMZtEN7Dnzmdjp-cCvk8JX3lP9QgaKOO3izYlGHmW7ZuD2wM0avZ53d6hRRTq06yBceEXC06XL2Bcn3-I_7fLvJa4RQoABtnbZhE86acJ5IxIsU"/>
+</div>
+<div class="p-5 flex-1 flex flex-col">
+<div class="flex items-center gap-2 mb-3">
+<span class="bg-surface-container-low text-on-surface-variant text-xs font-label uppercase tracking-wider px-2 py-1 rounded-md">蕨类</span>
+<span class="text-on-surface-variant text-xs font-body">昨天</span>
+</div>
+<h3 class="text-xl font-headline font-bold text-on-background mb-2">波斯顿蕨的加湿大作战</h3>
+<p class="text-on-surface-variant font-body text-sm line-clamp-2 mb-4">北方的暖气房对蕨类实在是不太友好，最近购入了一个小型加湿器专门对着它吹，叶片终于不再发黄干枯了。</p>
+<div class="mt-auto flex items-center gap-2 pt-4 border-t border-surface-container-low">
+<img alt="Avatar" class="w-8 h-8 rounded-full object-cover" data-alt="portrait of a young caucasian man with a slight beard wearing a grey sweater outdoors on a cloudy day" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC3h1skjnottHOCt3fg-3ZmkPewcets__pVecgYR0OzSRSdYc71MEWJ2gaQgrz7kG-qrTPcoL7U8eoFGm7MFeazoWLArBphEj8nShgZBVGZqdIaSD7umLuxH1G3K8npj3tCoJnpekcge187sFRBoT6FM0rZNOGNxwzjhh9ARx_UslglpAYvDO6G3YaB3tEpukB-Rv4h9npzbr5D02NCu-lpaZ4ALyCCJ5TXEIcVCp1E-2nw4GL6F3TpMOKXH_KpuO4RRgW129-SnJs"/>
+<span class="text-sm font-medium text-on-background font-body">PlantDad_99</span>
+</div>
+</div>
+</article>
+</div>
+</div>
+<!-- Right Sidebar (Discovery/Suggested) -->
+<aside class="lg:w-80 space-y-8">
+<!-- Daily Quote / Aesthetic block -->
+<div class="bg-surface-container-lowest p-6 rounded-xl relative overflow-hidden">
+<div class="absolute -right-6 -top-6 text-primary-container/20">
+<span class="material-symbols-outlined text-[100px]">format_quote</span>
+</div>
+<h4 class="text-sm font-label font-bold text-primary uppercase tracking-widest mb-4 relative z-10">今日绿意</h4>
+<p class="text-xl font-headline italic text-on-surface-variant leading-relaxed relative z-10">"在种植植物的过程中，我们实际上是在培养自己的耐心与平和。"</p>
+</div>
+<!-- Suggested Users -->
+<div class="bg-surface-container-lowest rounded-xl p-6">
+<h4 class="text-lg font-headline font-bold text-on-background mb-4">推荐植友</h4>
+<ul class="space-y-4">
+<li class="flex items-center justify-between group">
+<div class="flex items-center gap-3">
+<div class="relative">
+<img alt="User" class="w-12 h-12 rounded-full object-cover" data-alt="portrait of a smiling middle aged woman with short hair wearing a denim jacket, warm outdoor lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCr5NreGAtw8vrpJv8xWtHNpBTgGUf4W0G9O6WrwLymdWK0DveJgzOWx3FjNlVp7ujmbeywwr-doncpvz5fnY9XoyxdMlO05qHT8nkpAtnNZP_QMVxw9GE7HOZ5aKCH2S0F8V-uc_I02SyiPLKoKx1Lb5FNADvcedUWc7wKpx_bEOqMT7BdyVd2HMCE0g4fDNZ0SziKiT8LVMytihyf6AyHr8RF92TPjgBcjeo4GMPe_jLpmXTguS5Ow4hJcEawvbrTI0aUSmJStKg"/>
+<div class="absolute bottom-0 right-0 w-3 h-3 bg-primary rounded-full border-2 border-surface-container-lowest"></div>
+</div>
+<div>
+<p class="text-sm font-bold text-on-background font-body group-hover:text-primary transition-colors">雨林造景师</p>
+<p class="text-xs text-on-surface-variant font-body">擅长水陆缸制作</p>
+</div>
+</div>
+<button class="text-primary hover:bg-surface-container-low p-2 rounded-full transition-colors">
+<span class="material-symbols-outlined">person_add</span>
+</button>
+</li>
+<li class="flex items-center justify-between group">
+<div class="flex items-center gap-3">
+<img alt="User" class="w-12 h-12 rounded-full object-cover" data-alt="portrait of a young man with glasses looking thoughtfully away from the camera, urban background blurred out" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAlSGK16gqKibBETPICdIWXz0KlRmT0Cl7-6aT7IiZribRRTrTCxorU-BN2Xa6fk2QekK41JuLy9-cRGGCQ1h_4iTm1GRmiVKp1yz5q1bEXCLrRLGcyPNHOu69c_iYIk7yJ3gbjuYoM94guxfYi_X92XquHyKwTuHF7eBRR42Snr5x7FNjP3SFXOtdQ7QKyzVBREhIXJ1XpjAYD_vIO-wE8LMtqDPEAZIMs0JeYqpF2BXtnk_5wLRFtmy37ZX64npoy6JQKaZadndg"/>
+<div>
+<p class="text-sm font-bold text-on-background font-body group-hover:text-primary transition-colors">阳台小农夫</p>
+<p class="text-xs text-on-surface-variant font-body">专注可食用植物</p>
+</div>
+</div>
+<button class="text-primary hover:bg-surface-container-low p-2 rounded-full transition-colors">
+<span class="material-symbols-outlined">person_add</span>
+</button>
+</li>
+<li class="flex items-center justify-between group">
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 rounded-full bg-secondary-fixed-dim flex items-center justify-center text-on-secondary-fixed font-bold">C</div>
+<div>
+<p class="text-sm font-bold text-on-background font-body group-hover:text-primary transition-colors">CactusLover</p>
+<p class="text-xs text-on-surface-variant font-body">仙人掌收集控</p>
+</div>
+</div>
+<button class="text-primary hover:bg-surface-container-low p-2 rounded-full transition-colors">
+<span class="material-symbols-outlined">person_add</span>
+</button>
+</li>
+</ul>
+<button class="w-full mt-6 text-sm font-label font-bold text-primary py-2 hover:bg-surface-container-low rounded-lg transition-colors">查看更多</button>
+</div>
+<!-- Popular Tags -->
+<div class="bg-surface-container-lowest rounded-xl p-6">
+<h4 class="text-lg font-headline font-bold text-on-background mb-4">热门话题</h4>
+<div class="flex flex-wrap gap-2">
+<span class="px-3 py-1.5 bg-surface-container-low hover:bg-surface-container-high cursor-pointer transition-colors rounded-full text-xs font-label font-medium text-on-surface-variant"># 室内绿植推荐</span>
+<span class="px-3 py-1.5 bg-surface-container-low hover:bg-surface-container-high cursor-pointer transition-colors rounded-full text-xs font-label font-medium text-on-surface-variant"># 换盆技巧</span>
+<span class="px-3 py-1.5 bg-surface-container-low hover:bg-surface-container-high cursor-pointer transition-colors rounded-full text-xs font-label font-medium text-on-surface-variant"># 罕见天南星</span>
+<span class="px-3 py-1.5 bg-surface-container-low hover:bg-surface-container-high cursor-pointer transition-colors rounded-full text-xs font-label font-medium text-on-surface-variant"># 病虫害防治</span>
+<span class="px-3 py-1.5 bg-surface-container-low hover:bg-surface-container-high cursor-pointer transition-colors rounded-full text-xs font-label font-medium text-on-surface-variant"># 阳台花园</span>
+</div>
+</div>
+</aside>
+</main>
+<!-- BottomNavBar (Mobile) -->
+<nav class="md:hidden fixed bottom-0 w-full bg-surface-container-lowest border-t border-outline-variant/15 z-50 pb-safe shadow-[0_-4px_32px_-4px_rgba(25,28,27,0.06)]">
+<div class="flex justify-around items-center h-16">
+<a class="flex flex-col items-center justify-center w-full h-full text-primary" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="text-[10px] font-label mt-1 font-bold">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center w-full h-full text-on-surface-variant hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">potted_plant</span>
+<span class="text-[10px] font-label mt-1">Explore</span>
+</a>
+<div class="relative w-full h-full flex justify-center items-center">
+<button class="absolute -top-5 w-12 h-12 bg-primary text-on-primary rounded-full flex items-center justify-center shadow-[0_8px_32px_-4px_rgba(0,110,28,0.2)] hover:scale-105 transition-transform">
+<span class="material-symbols-outlined">add</span>
+</button>
+</div>
+<a class="flex flex-col items-center justify-center w-full h-full text-on-surface-variant hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">menu_book</span>
+<span class="text-[10px] font-label mt-1">Guide</span>
+</a>
+<a class="flex flex-col items-center justify-center w-full h-full text-on-surface-variant hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">account_circle</span>
+<span class="text-[10px] font-label mt-1">Profile</span>
+</a>
+</div>
+</nav>
+</body></html>
