@@ -382,7 +382,51 @@ func ListPublicDiaries(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "db error"})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"items": items, "total": total})
+
+	// Collect unique user IDs and fetch user info
+	userIDSet := map[string]bool{}
+	for _, item := range items {
+		userIDSet[item.UserID] = true
+	}
+	userIDs := make([]string, 0, len(userIDSet))
+	for uid := range userIDSet {
+		userIDs = append(userIDs, uid)
+	}
+
+	type userInfo struct {
+		ID       uint   `json:"id"`
+		Username string `json:"username"`
+		Avatar   string `json:"avatar"`
+	}
+	userMap := map[string]userInfo{}
+	if len(userIDs) > 0 {
+		var users []models.User
+		db.Where("id IN ?", userIDs).Find(&users)
+		for _, u := range users {
+			userMap[strconv.FormatUint(uint64(u.ID), 10)] = userInfo{
+				ID:       u.ID,
+				Username: u.Username,
+				Avatar:   u.Avatar,
+			}
+		}
+	}
+
+	// Build response items with user info
+	type itemWithUser struct {
+		models.Content
+		Username string `json:"username"`
+		Avatar   string `json:"avatar"`
+	}
+	result := make([]itemWithUser, len(items))
+	for i, item := range items {
+		result[i] = itemWithUser{Content: item}
+		if u, ok := userMap[item.UserID]; ok {
+			result[i].Username = u.Username
+			result[i].Avatar = u.Avatar
+		}
+	}
+
+	c.JSON(http.StatusOK, gin.H{"items": result, "total": total})
 }
 
 // ListContents handles GET /api/contents

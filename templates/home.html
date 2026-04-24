@@ -58,6 +58,7 @@
         .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
         .nav-active .material-symbols-outlined { font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
         .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .line-clamp-3 { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
         .ambient-shadow { box-shadow: 0 8px 32px -4px rgba(0,0,0,0.06); }
         .glass { background: rgba(248,250,247,0.7); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); }
     </style>
@@ -285,7 +286,6 @@
         let offset = 0;
         const limit = 10;
         let total = 0;
-        let isFirstLoad = true;
 
         async function loadDiaries() {
             const resp = await fetch(`${API_BASE}/diaries?limit=${limit}&offset=${offset}`);
@@ -296,14 +296,11 @@
 
             const feed = document.getElementById('feed');
 
-            items.forEach((item, idx) => {
-                const isFeatured = isFirstLoad && idx === 0 && offset === 0;
-                feed.insertAdjacentHTML('beforeend', renderCard(item, isFeatured));
+            items.forEach(item => {
+                feed.insertAdjacentHTML('beforeend', renderCard(item));
             });
 
             offset += items.length;
-            isFirstLoad = false;
-
             document.getElementById('loading').classList.add('hidden');
             if (offset < total) {
                 document.getElementById('loadMore').classList.remove('hidden');
@@ -315,71 +312,51 @@
             }
         }
 
-        function renderCard(item, featured) {
+        function renderCard(item) {
             const date = formatDate(item.createdAt);
-            const hasImage = item.images && item.images.length > 0;
-            const firstImage = hasImage ? escapeHtml(item.images[0]) : '';
+            const images = item.images || [];
+            const displayImages = images.slice(0, 9);
+            const authorName = item.username ? escapeHtml(item.username) : '用户 ' + escapeHtml(String(item.userId));
+            const avatarUrl = item.avatar ? escapeHtml(item.avatar) : '';
 
+            // Tags for footer
             const tags = (item.tags || []).map(t =>
-                `<span class="inline-block px-2.5 py-1 rounded-full bg-primary/10 text-primary text-xs font-label font-medium">${escapeHtml(t)}</span>`
+                `<span class="inline-block px-2 py-0.5 rounded-full bg-primary/10 text-primary text-[11px] font-label font-medium">${escapeHtml(t)}</span>`
             ).join('');
 
-            const extraImages = hasImage && item.images.length > 1
-                ? item.images.slice(1).map(url =>
-                    `<img src="${escapeHtml(url)}" class="w-full aspect-square object-cover rounded-xl cursor-pointer hover:scale-[1.02] transition-transform" onclick="event.stopPropagation(); openLightbox('${escapeHtml(url)}')" onerror="this.style.display='none'">`
-                ).join('')
-                : '';
-
-            if (featured && hasImage) {
-                return `
-                    <article class="bg-surface-container-lowest rounded-3xl ambient-shadow overflow-hidden">
-                        <div class="flex flex-col md:flex-row">
-                            <div class="md:w-1/2 relative overflow-hidden">
-                                <img src="${firstImage}" class="w-full h-64 md:h-full object-cover cursor-pointer hover:scale-105 transition-transform duration-500"
-                                     onclick="openLightbox('${firstImage}')" onerror="this.parentElement.style.display='none'">
-                            </div>
-                            <div class="md:w-1/2 p-5 lg:p-6 flex flex-col justify-center">
-                                <div class="flex items-center gap-2 mb-3">
-                                    ${tags ? `<div class="flex flex-wrap gap-1.5">${tags}</div>` : ''}
-                                    <span class="text-outline text-xs font-label ml-auto whitespace-nowrap">${date}</span>
-                                </div>
-                                <h2 class="font-headline font-bold text-lg lg:text-xl text-on-surface mb-2">${escapeHtml(item.title)}</h2>
-                                ${item.content ? `<p class="text-on-surface-variant text-sm leading-relaxed line-clamp-2">${escapeHtml(item.content)}</p>` : ''}
-                                <div class="flex items-center gap-2 mt-4">
-                                    <div class="w-7 h-7 rounded-full bg-tertiary-container/40 flex items-center justify-center">
-                                        <span class="material-symbols-outlined text-primary text-sm">person</span>
-                                    </div>
-                                    <span class="text-on-surface-variant text-xs font-label">用户 ${escapeHtml(String(item.userId))}</span>
-                                </div>
-                                ${extraImages ? `<div class="grid grid-cols-3 gap-2 mt-4">${extraImages}</div>` : ''}
-                            </div>
-                        </div>
-                    </article>
-                `;
+            // Image grid (3x3, max 9 images, aspect-ratio preserved)
+            let imageBlock = '';
+            if (displayImages.length > 0) {
+                const imgItems = displayImages.map(url =>
+                    `<img src="${escapeHtml(url)}" class="w-full aspect-square object-cover rounded-lg cursor-pointer hover:opacity-90 transition-opacity" onclick="event.stopPropagation(); openLightbox('${escapeHtml(url)}')" onerror="this.style.display='none'">`
+                ).join('');
+                imageBlock = `<div class="grid grid-cols-3 gap-1.5 mt-3">${imgItems}</div>`;
             }
 
-            const imageBlock = hasImage
-                ? `<div class="relative overflow-hidden rounded-xl mb-3">
-                       <img src="${firstImage}" class="w-full aspect-square object-cover cursor-pointer hover:scale-105 transition-transform duration-500"
-                            onclick="event.stopPropagation(); openLightbox('${firstImage}')" onerror="this.parentElement.style.display='none'">
-                   </div>
-                   ${item.images.length > 1 ? `<div class="grid grid-cols-3 gap-2 mb-3">${extraImages}</div>` : ''}`
-                : '';
+            // Author avatar
+            const avatarBlock = avatarUrl
+                ? `<img src="${avatarUrl}" class="w-7 h-7 rounded-full object-cover" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">`
+                  + `<div class="w-7 h-7 rounded-full bg-tertiary-container/40 items-center justify-center hidden"><span class="material-symbols-outlined text-primary text-sm">person</span></div>`
+                : `<div class="w-7 h-7 rounded-full bg-tertiary-container/40 flex items-center justify-center"><span class="material-symbols-outlined text-primary text-sm">person</span></div>`;
 
             return `
                 <article class="bg-surface-container-lowest rounded-3xl ambient-shadow p-5">
-                    ${imageBlock}
-                    <div class="flex items-center gap-2 mb-2">
-                        ${tags ? `<div class="flex flex-wrap gap-1.5">${tags}</div>` : ''}
-                        <span class="text-outline text-xs font-label ml-auto whitespace-nowrap">${date}</span>
+                    <!-- Header: title (left) + date (right) -->
+                    <div class="flex items-start justify-between gap-3">
+                        <h2 class="font-headline font-bold text-base text-on-surface truncate flex-1">${escapeHtml(item.title)}</h2>
+                        <span class="text-outline text-xs font-label whitespace-nowrap mt-0.5">${date}</span>
                     </div>
-                    <h2 class="font-headline font-bold text-base text-on-surface mb-1.5">${escapeHtml(item.title)}</h2>
-                    ${item.content ? `<p class="text-on-surface-variant text-sm leading-relaxed line-clamp-2">${escapeHtml(item.content)}</p>` : ''}
-                    <div class="flex items-center gap-2 mt-3">
-                        <div class="w-7 h-7 rounded-full bg-tertiary-container/40 flex items-center justify-center">
-                            <span class="material-symbols-outlined text-primary text-sm">person</span>
+                    <!-- Content: max 3 lines -->
+                    ${item.content ? `<p class="text-on-surface-variant text-sm leading-relaxed line-clamp-3 mt-2">${escapeHtml(item.content)}</p>` : ''}
+                    <!-- Image grid: 3x3, max 9 -->
+                    ${imageBlock}
+                    <!-- Footer: avatar+author (left), tags (right) -->
+                    <div class="flex items-center mt-4 gap-3">
+                        <div class="flex items-center gap-2 shrink-0">
+                            ${avatarBlock}
+                            <span class="text-on-surface-variant text-xs font-label">${authorName}</span>
                         </div>
-                        <span class="text-on-surface-variant text-xs font-label">用户 ${escapeHtml(String(item.userId))}</span>
+                        ${tags ? `<div class="flex flex-wrap gap-1 justify-end flex-1 min-w-0">${tags}</div>` : ''}
                     </div>
                 </article>
             `;
